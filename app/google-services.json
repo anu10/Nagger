@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1068945111240",
+    "project_id": "nagger-ea0d2"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1068945111240:android:43b99506bad536cb",
+        "android_client_info": {
+          "package_name": "edu.ohio_state.cse.nagger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1068945111240-dkec3u7qsa1d2h8u230afhorccc6k91p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.ohio_state.cse.nagger",
+            "certificate_hash": "0CF3C7118CBF7763AF82D814672AF8D1A27ADE53"
+          }
+        },
+        {
+          "client_id": "1068945111240-bihrbvvmdh320fi2459gqa2q6qe5d5o5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCF5_y8fA9zYNbM935BFIG-jT4jpaXaqSA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
