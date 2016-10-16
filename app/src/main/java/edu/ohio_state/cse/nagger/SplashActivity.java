@@ -5,6 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -13,11 +16,16 @@ public class SplashActivity extends AppCompatActivity {
     private int mTimeStep = 100;
     private boolean isTouched = false;
     private final String TAG = getClass().getSimpleName();
+    private ImageView mImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_splash);
+        mImageView =(ImageView)findViewById(R.id.mImageView);
+        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.animation_splash);
+        mImageView.setAnimation(animation);
         Log.d(TAG,"Inside Method OnCreate");
         Thread splashThread = new Thread(){
             public void run(){
