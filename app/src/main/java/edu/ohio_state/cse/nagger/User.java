@@ -1,8 +1,5 @@
 package edu.ohio_state.cse.nagger;
 
-/**
- * Created by Sayam Ganguly on 10/14/2016.
- */
 public class User {
 
     private String mUserName;

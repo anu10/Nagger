@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -15,8 +14,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 
-public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
-        View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final String TAG = getClass().getSimpleName();
     private SignInButton mButtonSignIn;
@@ -32,17 +30,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         DatabaseHelper.setTableNAme(DatabaseHelper.USER_TABLE);
         databaseHelper = new DatabaseHelper(this);
-        mGoogleTransactions = new GoogleTransactions(this);
+        mGoogleTransactions = GoogleTransactions.getGoogleTransaction();
 
         mButtonSignIn = (SignInButton) findViewById(R.id.button_sign_in);
         mButtonSignIn.setSize(SignInButton.SIZE_WIDE);
 
         mButtonSignIn.setOnClickListener(this);
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult conncectionResult){
-
     }
 
     @Override
