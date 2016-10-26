@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="#CEDC76">
+              android:layout_height="wrap_content">
 
     <TextView
         android:id = "@+id/reminder_title"
@@ -11,15 +10,13 @@
         android:layout_height="wrap_content"
         android:text = "Reminder Title"
         android:textSize="16dp"
-        android:textStyle="bold"
-        android:textColor="@color/abc_background_cache_hint_selector_material_dark"/>
+        android:textStyle="bold"/>
 
     <TextView
         android:id = "@+id/reminder_from"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="14dp"
-        android:textColor="@color/abc_background_cache_hint_selector_material_dark"
         android:layout_below="@id/reminder_title"
         android:text = "JIJU"/>
 

@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 public class ListActivity extends FragmentActivity {
@@ -19,17 +21,28 @@ public class ListActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        final Button mCreateReminder;
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.list_fragment);
+        final FragmentManager fm = getSupportFragmentManager();
+        final Fragment fragment = fm.findFragmentById(R.id.list_fragment);
 
-        if(fragment == null){
+        if(fragment == null) {
             ListFragment listFragment = new ListFragment();
-            fm.beginTransaction().add(R.id.list_fragment,listFragment)
+            fm.beginTransaction().add(R.id.list_fragment, listFragment)
                     .commit();
         }
+        mCreateReminder = (Button) findViewById(R.id.button_create_rem);
+        mCreateReminder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CreateReminderFragment createReminderFragment = new CreateReminderFragment();
+                fm.beginTransaction().replace(R.id.list_fragment,createReminderFragment).commit();
+                mCreateReminder.setVisibility(View.INVISIBLE);
+            }
+        });
 
     }
 
