@@ -1,26 +1,22 @@
 package edu.ohio_state.cse.nagger;
 
 import android.content.Intent;
-import android.provider.ContactsContract;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 
-public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
-        View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private final String TAG = getClass().getSimpleName();
     private SignInButton mButtonSignIn;
     private GoogleTransactions mGoogleTransactions;
     private User mUser;
@@ -30,19 +26,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Log.d(TAG,"Inside Method OnCreate");
+
         DatabaseHelper.setTableNAme(DatabaseHelper.USER_TABLE);
         databaseHelper = new DatabaseHelper(this);
-        mGoogleTransactions = new GoogleTransactions(this);
+        mGoogleTransactions = GoogleTransactions.getGoogleTransaction();
 
         mButtonSignIn = (SignInButton) findViewById(R.id.button_sign_in);
         mButtonSignIn.setSize(SignInButton.SIZE_WIDE);
 
         mButtonSignIn.setOnClickListener(this);
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult conncectionResult){
-
     }
 
     @Override
@@ -79,5 +72,35 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         }
         else
             Toast.makeText(this,"Wrong Email",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        Log.d(TAG,"Inside Method OnStart");
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.d(TAG,"Inside Method OnResume");
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        Log.d(TAG,"Inside Method OnPause");
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        Log.d(TAG,"Inside Method OnStop");
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Log.d(TAG,"Inside Method OnDestroy");
     }
 }

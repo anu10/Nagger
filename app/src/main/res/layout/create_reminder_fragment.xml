@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+
+    <TextView
+        android:id = "@+id/recipient_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text = "@string/Recipient"/>
+
+    <EditText
+        android:id = "@+id/recipient_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:cursorVisible="true"
+        />
+
+    <TextView
+        android:id = "@+id/description_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text = "@string/Description"/>
+
+    <EditText
+        android:id = "@+id/description_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:cursorVisible="true"
+        android:elegantTextHeight="false"
+        android:lines="5"/>
+
+    <TextView
+        android:id = "@+id/date_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text = "@string/Date"/>
+
+    <DatePicker
+        android:id = "@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"></DatePicker>
+
+    <TextView
+        android:id = "@+id/time_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text = "@string/Time"/>
+
+    <TimePicker
+        android:id = "@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"></TimePicker>
+
+    <Button
+        android:id = "@+id/button_send_reminder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/Send_Reminder"/>
+
+</LinearLayout>
+</ScrollView>

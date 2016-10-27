@@ -1,6 +1,7 @@
 package edu.ohio_state.cse.nagger;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
@@ -35,6 +36,12 @@ public class DatabaseHelper {
         return this.insertStatement.executeInsert();
     }
 
+    public Cursor selectAll()
+    {
+        Cursor cur = db.rawQuery("SELECT * FROM USER", null);
+        return cur;
+    }
+
 
     private static class NaggerOpenHelper extends SQLiteOpenHelper{
 
@@ -52,6 +59,8 @@ public class DatabaseHelper {
             }
         }
 
+
+
         @Override
         public void onUpgrade(SQLiteDatabase db , int oldVersion, int newVersion){
             switch (mTableName) {
@@ -61,7 +70,5 @@ public class DatabaseHelper {
                 }
             }
         }
-
     }
 }
-

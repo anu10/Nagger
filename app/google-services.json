@@ -1,7 +1,9 @@
 {
   "project_info": {
     "project_number": "1068945111240",
-    "project_id": "nagger-ea0d2"
+    "firebase_url": "https://nagger-ea0d2.firebaseio.com",
+    "project_id": "nagger-ea0d2",
+    "storage_bucket": "nagger-ea0d2.appspot.com"
   },
   "client": [
     {
@@ -21,6 +23,10 @@
           }
         },
         {
+          "client_id": "1068945111240-hc0dj82o0pk9926jj5kjpan56v01a8hs.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
           "client_id": "1068945111240-bihrbvvmdh320fi2459gqa2q6qe5d5o5.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -35,11 +41,16 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1068945111240-hc0dj82o0pk9926jj5kjpan56v01a8hs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }
