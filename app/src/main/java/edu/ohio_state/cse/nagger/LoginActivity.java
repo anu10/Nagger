@@ -9,9 +9,7 @@ import android.widget.Toast;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -67,7 +65,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Toast.makeText(this, account.getDisplayName(), Toast.LENGTH_SHORT).show();
             UserManager userManager = new UserManager();
             mUser = userManager.createUser(account.getDisplayName(),account.getEmail());
-            databaseHelper.insert(mUser.getEmail(),mUser.getUserName());
+            databaseHelper.insertUser(mUser.getEmail(),mUser.getUserName());
             startActivity(new Intent(this,ListActivity.class));
         }
         else

@@ -35,28 +35,28 @@
 
 
         <!--<service-->
-            <!--android:name=".MyFirebaseMessagingService"-->
-            <!--android:enabled="true"-->
-            <!--android:exported="true">-->
-            <!--   -->
-            <!--<intent-filter>-->
-                <!--       -->
-                <!--<action android:name="com.google.firebase.MESSAGING_EVENT"/>-->
-                <!--   -->
-            <!--</intent-filter>-->
+        <!--android:name=".MyFirebaseMessagingService"-->
+        <!--android:enabled="true"-->
+        <!--android:exported="true">-->
+        <!--   -->
+        <!--<intent-filter>-->
+        <!--       -->
+        <!--<action android:name="com.google.firebase.MESSAGING_EVENT"/>-->
+        <!--   -->
+        <!--</intent-filter>-->
         <!--</service>-->
         <!--<service-->
-            <!--android:name=".FirebaseInstanceIDService"-->
-            <!--android:enabled="true"-->
-            <!--android:exported="true">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>-->
-            <!--</intent-filter>-->
+        <!--android:name=".FirebaseInstanceIDService"-->
+        <!--android:enabled="true"-->
+        <!--android:exported="true">-->
+        <!--<intent-filter>-->
+        <!--<action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>-->
+        <!--</intent-filter>-->
         <!--</service>-->
         <!--<service-->
-            <!--android:name=".FirebaseInstanceIDService"-->
-            <!--android:enabled="true"-->
-            <!--android:exported="true">-->
+        <!--android:name=".FirebaseInstanceIDService"-->
+        <!--android:enabled="true"-->
+        <!--android:exported="true">-->
         <!--</service>-->
     </application>
 
@@ -75,4 +75,4 @@
 
 
 
-    </manifest>
+</manifest>
