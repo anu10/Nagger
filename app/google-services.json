@@ -1,53 +1,32 @@
 {
   "project_info": {
-    "project_number": "1068945111240",
-    "firebase_url": "https://nagger-ea0d2.firebaseio.com",
-    "project_id": "nagger-ea0d2",
-    "storage_bucket": "nagger-ea0d2.appspot.com"
+    "project_number": "625405682230",
+    "firebase_url": "https://nagger2-f64bd.firebaseio.com",
+    "project_id": "nagger2-f64bd",
+    "storage_bucket": "nagger2-f64bd.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1068945111240:android:43b99506bad536cb",
+        "mobilesdk_app_id": "1:625405682230:android:43b99506bad536cb",
         "android_client_info": {
           "package_name": "edu.ohio_state.cse.nagger"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1068945111240-dkec3u7qsa1d2h8u230afhorccc6k91p.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "edu.ohio_state.cse.nagger",
-            "certificate_hash": "0CF3C7118CBF7763AF82D814672AF8D1A27ADE53"
-          }
-        },
-        {
-          "client_id": "1068945111240-hc0dj82o0pk9926jj5kjpan56v01a8hs.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "1068945111240-bihrbvvmdh320fi2459gqa2q6qe5d5o5.apps.googleusercontent.com",
+          "client_id": "625405682230-14kbcckagsaregfnhu03pq5ccv9b4pbh.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCF5_y8fA9zYNbM935BFIG-jT4jpaXaqSA"
-        }
-      ],
+      "api_key": [{ "current_key": "" }],
       "services": {
         "analytics_service": {
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1068945111240-hc0dj82o0pk9926jj5kjpan56v01a8hs.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2
