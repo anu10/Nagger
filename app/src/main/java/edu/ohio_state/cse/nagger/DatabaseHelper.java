@@ -9,19 +9,20 @@ import android.database.sqlite.SQLiteStatement;
 import java.sql.Time;
 import java.util.Date;
 
-/**
- * Created by Sayam Ganguly on 10/14/2016.
- */
+
 public class DatabaseHelper {
     private static final String DATABASE_NAME = "nagger.db";
     private static final int DATABASE_VERSION = 1;
     public static final String USER_TABLE = "User";
     public static final String REMINDER_TABLE = "Reminder";
+    public static final String NOTIFICATION_TABLE = "Notification";
+
     private Context context;
     private SQLiteDatabase db;
     private SQLiteStatement insertStatement;
     private static final String INSERT_USER = "insert into " + USER_TABLE + "(email, username) values (?,?)";
-    private static final String INSERT_REMINDER = "insert into " + REMINDER_TABLE + "(reminderId, title, description, time, date) values (?,?,?,?)";
+    private static final String INSERT_REMINDER = "insert into " + REMINDER_TABLE + "(reminderId, title, description, time, date) values (?,?,?,?,?)";
+    private static final String INSERT_NOTIFICATION = "insert into" + NOTIFICATION_TABLE + "(reminderId, senderEmail, receiverEmail, Status) values (?,?,?,?)";
 
     private static String mTableName;
 
@@ -42,15 +43,24 @@ public class DatabaseHelper {
         return this.insertStatement.executeInsert();
     }
 
-    public long insertReminder(String title, String description, Date date, Time time){
+    public long insertReminder(String reminderId, String title, String description, Date date, Time time){
         this.insertStatement = this.db.compileStatement(INSERT_REMINDER);
-        this.insertStatement.bindString(1,title);
-        this.insertStatement.bindString(2,description);
-        this.insertStatement.bindString(3, date.toString());
-        this.insertStatement.bindString(4,time.toString());
+        this.insertStatement.bindString(1,reminderId);
+        this.insertStatement.bindString(2,title);
+        this.insertStatement.bindString(3,description);
+        this.insertStatement.bindString(4,date.toString());
+        this.insertStatement.bindString(5,time.toString());
         return this.insertStatement.executeInsert();
     }
 
+    public long insertNotification(String reminderId, String senderEmail, String receiverEmail, String status){
+        this.insertStatement = this.db.compileStatement(INSERT_REMINDER);
+        this.insertStatement.bindString(1,reminderId);
+        this.insertStatement.bindString(2,senderEmail);
+        this.insertStatement.bindString(3,receiverEmail);
+        this.insertStatement.bindString(4,status);
+        return this.insertStatement.executeInsert();
+    }
     public Cursor selectAll()
     {
         Cursor cur = db.rawQuery("SELECT * FROM USER", null);
@@ -75,6 +85,10 @@ public class DatabaseHelper {
                     db.execSQL("CREATE TABLE " + REMINDER_TABLE + "(reminderId TEXT PRIMARY KEY, title TEXT, description TEXT, date DATE, time TIME)");
                     break;
                 }
+                case NOTIFICATION_TABLE:{
+                    db.execSQL("CREATE TABLE " + NOTIFICATION_TABLE + "(reminderId TEXT PRIMARY KEY, senderEmail TEXT, receiverEmail TEXT, status TEXT)");
+                    break;
+                }
             }
         }
 
@@ -89,6 +103,10 @@ public class DatabaseHelper {
                 }
                 case REMINDER_TABLE: {
                     db.execSQL("DROP TABLE IF EXISTS " + REMINDER_TABLE);
+                    onCreate(db);
+                }
+                case NOTIFICATION_TABLE: {
+                    db.execSQL("DROP TABLE IF EXISTS " + NOTIFICATION_TABLE);
                     onCreate(db);
                 }
             }
