@@ -6,6 +6,10 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.READ_PROFILE"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <permission android:name="edu.ohio_state.cse.nagger.permission.C2D_MESSAGE" android:protectionLevel="signature"/>
+    <uses-permission android:name="edu.ohio_state.cse.nagger.permission.C2D_MESSAGE"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.SEND"/>
+
 
     <application
         android:allowBackup="true"
@@ -23,7 +27,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
+        </activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
+
 
         <!--<service-->
             <!--android:name=".MyFirebaseMessagingService"-->
@@ -37,7 +46,7 @@
             <!--</intent-filter>-->
         <!--</service>-->
         <!--<service-->
-            <!--android:name=".MyFirebaseInstanceIdService"-->
+            <!--android:name=".FirebaseInstanceIDService"-->
             <!--android:enabled="true"-->
             <!--android:exported="true">-->
             <!--<intent-filter>-->
@@ -45,10 +54,25 @@
             <!--</intent-filter>-->
         <!--</service>-->
         <!--<service-->
-            <!--android:name=".MyFirebaseInstanceIdService"-->
+            <!--android:name=".FirebaseInstanceIDService"-->
             <!--android:enabled="true"-->
             <!--android:exported="true">-->
         <!--</service>-->
     </application>
 
-</manifest>
+
+    <service android:name=".MyFirebaseMessagingService">
+        <intent-filter>
+            <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+        </intent-filter>
+    </service>
+
+    <service android:name=".FirebaseIDService">
+        <intent-filter>
+            <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+        </intent-filter>
+    </service>
+
+
+
+    </manifest>
