@@ -22,7 +22,6 @@ public class ListActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         final Button mCreateReminder;
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
@@ -38,9 +37,12 @@ public class ListActivity extends FragmentActivity {
         mCreateReminder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CreateReminderFragment createReminderFragment = new CreateReminderFragment();
-                fm.beginTransaction().replace(R.id.list_fragment,createReminderFragment).commit();
-                mCreateReminder.setVisibility(View.INVISIBLE);
+                ListActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        startActivity(new Intent(ListActivity.this, CreateReminderActivity.class));
+                    }
+                });
             }
         });
 

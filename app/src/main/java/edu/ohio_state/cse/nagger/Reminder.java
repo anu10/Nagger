@@ -10,21 +10,21 @@ import java.util.UUID;
  */
 public class Reminder {
 
-    private UUID mReminderID;
+    private int mReminderID;
     private String mReminderTitle;
     private String mReminderDesc;
     private Date mDate;
     private java.sql.Time mTime;
 
     public Reminder(String reminderTitle, String reminderDesc) {
-        mReminderID = UUID.randomUUID();
+        mReminderID = (int)Math.random();
         mReminderTitle = reminderTitle;
         mReminderDesc = reminderDesc;
         mDate = new Date();
 //        mTime = (Time)Calendar.getInstance().getTime();
     }
 
-    public Reminder(UUID reminderID, String reminderTitle, String reminderDesc, Date date, Time time) {
+    public Reminder(int reminderID, String reminderTitle, String reminderDesc, Date date, Time time) {
         mReminderID = reminderID;
         mReminderTitle = reminderTitle;
         mReminderDesc = reminderDesc;
@@ -33,7 +33,7 @@ public class Reminder {
     }
 
 
-    public UUID getReminderID() {
+    public int getReminderID() {
         return mReminderID;
     }
 

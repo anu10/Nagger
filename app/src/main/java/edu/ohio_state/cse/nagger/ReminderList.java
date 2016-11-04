@@ -35,4 +35,12 @@ public class ReminderList {
     public List<Reminder> getReminders(){
         return mReminders;
     }
+
+    public Reminder getSingleReminder(int reminderID){
+        for (Reminder reminder: mReminders) {
+            if (reminder.getReminderID() == reminderID)
+                return reminder;
+        }
+        return null;
+    }
 }

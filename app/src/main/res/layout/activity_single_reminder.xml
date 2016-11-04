@@ -2,23 +2,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="wrap_content"
+              android:paddingBottom="4dp"
+              android:paddingTop="4dp">
 
     <TextView
         android:id = "@+id/reminder_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text = "Reminder Title"
-        android:textSize="16dp"
+        android:textSize="24dp"
         android:textStyle="bold"/>
+
+    <TextView
+        android:id = "@+id/reminder_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
     <TextView
         android:id = "@+id/reminder_from"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14dp"
-        android:layout_below="@id/reminder_title"
-        android:text = "JIJU"/>
+        android:textSize="16dp"
+        android:layout_below="@id/reminder_title"/>
 
     <TextView
         android:id = "@+id/reminder_date"
@@ -31,5 +37,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"/>
+
+    <ImageButton
+        android:src="@drawable/reject"
+        android:id = "@+id/button_reject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/reminder_date"
+        android:layout_alignParentRight="true"/>
+
+    <ImageButton
+        android:src="@drawable/accept"
+        android:id = "@+id/button_accept"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/reminder_date"
+        android:layout_toLeftOf="@id/button_reject"
+        android:layout_marginRight="8dp"/>
 
 </RelativeLayout>

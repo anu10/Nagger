@@ -1,7 +1,16 @@
 package edu.ohio_state.cse.nagger;
 
+import android.*;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.provider.CalendarContract;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,12 +23,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
+import java.util.UUID;
 
 public class ListFragment extends Fragment {
 
@@ -27,6 +41,9 @@ public class ListFragment extends Fragment {
     private User mUser;
     private RecyclerView mCrimeRecyclerView;
     private ReminderAdapter mAdapter;
+    ReminderList reminderList;
+    ContentResolver cr;
+    ContentValues values;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,8 +52,6 @@ public class ListFragment extends Fragment {
         mGoogleTransactions = GoogleTransactions.getGoogleTransaction();
         mUser = UserManager.getUser();
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -97,28 +112,52 @@ public class ListFragment extends Fragment {
         super.onResume();
     }
 
-    private class ReminderHolder extends RecyclerView.ViewHolder {
+    private class ReminderHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private Reminder mReminder;
+        private TextView mReminderID;
         private TextView mReminderTitle;
         private TextView mReminderFrom;
         private TextView mReminderDate;
         private TextView mReminderTime;
+        private ImageButton mAcceptButton;
+        private ImageButton mRejectButton;
 
         public ReminderHolder(View itemView){
             super(itemView);
+            mReminderID = (TextView) itemView.findViewById(R.id.reminder_id);
             mReminderTitle = (TextView) itemView.findViewById(R.id.reminder_title);
             mReminderFrom = (TextView) itemView.findViewById(R.id.reminder_from);
             mReminderDate = (TextView) itemView.findViewById(R.id.reminder_date);
             mReminderTime = (TextView) itemView.findViewById(R.id.reminder_time);
+            mAcceptButton = (ImageButton) itemView.findViewById(R.id.button_accept);
+            mAcceptButton.setOnClickListener(this);
+            mRejectButton = (ImageButton) itemView.findViewById(R.id.button_reject);
+            mRejectButton.setOnClickListener(this);
         }
 
         public void bindReminder(Reminder reminder){
             mReminder = reminder;
+            mReminderID.setText(String.valueOf(mReminder.getReminderID()));
             mReminderTitle.setText(mReminder.getReminderTitle());
             mReminderFrom.setText(mReminder.getReminderDesc());
             mReminderDate.setText(mReminder.getDate().toString());
 //            mReminderDate.setText(mReminder.getTime().toString());
+        }
+
+        @Override
+        public void onClick(View v) {
+            Reminder reminder;
+            int remId = Integer.parseInt(mReminderID.getText().toString());
+            reminder = reminderList.getSingleReminder(remId);
+            switch (v.getId()){
+                case R.id.button_accept:{
+                    Update_Calendar(v,reminder);
+                }
+                case R.id.button_reject:{
+
+                }
+            }
         }
     }
 
@@ -150,10 +189,54 @@ public class ListFragment extends Fragment {
     }
 
     public void updateUI(){
-        ReminderList reminderList = ReminderList.get(getActivity());
+        reminderList = ReminderList.get(getActivity());
         List<Reminder> reminders = reminderList.getReminders();
 
         mAdapter = new ReminderAdapter(reminders);
         mCrimeRecyclerView.setAdapter(mAdapter);
     }
+
+    public void Update_Calendar(View v,Reminder reminder){
+        long startMillis = 0;
+        long endMillis = 0;
+        Calendar beginTime = Calendar.getInstance();
+        beginTime.set(2016, 11, 14, 7, 30);
+        startMillis = beginTime.getTimeInMillis();
+        Calendar endTime = Calendar.getInstance();
+        endTime.set(2016, 11, 14, 7, 45);
+        endMillis = endTime.getTimeInMillis();
+        cr = v.getContext().getContentResolver();
+        values = new ContentValues();
+        values.put(CalendarContract.Events.DTSTART,(new Date()).getTime() + 60 * 60 * 1);
+        values.put(CalendarContract.Events.DTEND,(new Date()).getTime() + 60 * 60 * 10);
+        values.put(CalendarContract.Events.TITLE,reminder.getReminderTitle());
+        values.put(CalendarContract.Events.DESCRIPTION,reminder.getReminderDesc());
+        values.put(CalendarContract.Events.CALENDAR_ID,1);
+        values.put(CalendarContract.Events.STATUS, CalendarContract.Events.STATUS_CONFIRMED);
+        values.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
+        int permissionCheck = ContextCompat.checkSelfPermission(v.getContext(),
+                android.Manifest.permission.WRITE_CALENDAR);
+        if(permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{android.Manifest.permission.WRITE_CALENDAR}, 1);
+        }
+        else
+            cr.insert(CalendarContract.Events.CONTENT_URI, values);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case 1:{
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
+                            android.Manifest.permission.WRITE_CALENDAR);
+                    if(permissionCheck == PackageManager.PERMISSION_GRANTED)
+                        cr.insert(CalendarContract.Events.CONTENT_URI, values);
+                }
+            }
+        }
+    }
+
 }
