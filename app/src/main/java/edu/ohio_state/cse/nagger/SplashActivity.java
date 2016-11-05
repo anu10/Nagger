@@ -110,6 +110,7 @@ public class SplashActivity extends FragmentActivity implements GoogleApiClient.
 //                    }
 
 
+
                 }
             }
         };

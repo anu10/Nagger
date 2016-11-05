@@ -16,6 +16,7 @@ public class CreateReminderActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_reminder);
 
+
         final FragmentManager fm = getSupportFragmentManager();
         final Fragment fragment = fm.findFragmentById(R.id.reminder_fragment);
 

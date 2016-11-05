@@ -22,6 +22,7 @@
         android:cursorVisible="true"
         />
 
+
     <TextView
         android:id = "@+id/description_title"
         android:layout_width="wrap_content"

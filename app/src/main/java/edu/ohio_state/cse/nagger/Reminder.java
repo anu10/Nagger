@@ -52,4 +52,5 @@ public class Reminder {
     public Time getTime() {
         return mTime;
     }
+
 }

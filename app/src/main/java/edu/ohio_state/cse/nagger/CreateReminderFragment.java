@@ -119,6 +119,7 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
         senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
+
     public void sendServer(){
         OkHttpClient mClient = new OkHttpClient();
         FirebaseMessaging fm = FirebaseMessaging.getInstance();

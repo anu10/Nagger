@@ -26,6 +26,7 @@
         android:textSize="16dp"
         android:layout_below="@id/reminder_title"/>
 
+
     <TextView
         android:id = "@+id/reminder_date"
         android:layout_width="wrap_content"

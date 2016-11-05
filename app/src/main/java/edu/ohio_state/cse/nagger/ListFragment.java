@@ -110,6 +110,7 @@ public class ListFragment extends Fragment {
     public void onResume() {
         mGoogleTransactions = GoogleTransactions.getGoogleTransaction();
         super.onResume();
+
     }
 
     private class ReminderHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
