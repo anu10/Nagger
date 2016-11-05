@@ -8,8 +8,13 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.sql.Date;
+import java.sql.Time;
+
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "FCM";
+    private Reminder mReminder;
+    DatabaseHelper mDatabaseHelper;
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         // TODO: Handle FCM messages here.
@@ -18,6 +23,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // message, here is where that should be initiated.
         Log.d(TAG, "From: " + remoteMessage.getFrom());
         Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
-//        remoteMessage.
+        mReminder = new Reminder(remoteMessage.getData().get("Sender"),remoteMessage.getData().get("Description"),
+                Date.valueOf(remoteMessage.getData().get("Date")), Time.valueOf(remoteMessage.getData().get("Time")));
+        DatabaseHelper.setTableName("Reminder");
+        mDatabaseHelper = new DatabaseHelper(this);
+        mDatabaseHelper.insertReminder(mReminder);
     }
 }

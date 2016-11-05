@@ -49,7 +49,7 @@ public class FirebaseIDService extends FirebaseInstanceIdService {
                         add("Email",user.getEmail()).
                         add("Token",refreshedToken).build();
                 try{
-                    mClient.newCall(new Request.Builder().url("http://192.168.0.9/index1.php").
+                    mClient.newCall(new Request.Builder().url("http://192.168.0.21/storeUser.php").
                             post(requestBody).build()).execute();
                 }
                 catch (IOException e){

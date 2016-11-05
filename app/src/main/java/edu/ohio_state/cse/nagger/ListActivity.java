@@ -28,11 +28,11 @@ public class ListActivity extends FragmentActivity {
         final FragmentManager fm = getSupportFragmentManager();
         final Fragment fragment = fm.findFragmentById(R.id.list_fragment);
 
-        if(fragment == null) {
+//        if(fragment == null) {
             ListFragment listFragment = new ListFragment();
             fm.beginTransaction().add(R.id.list_fragment, listFragment)
                     .commit();
-        }
+//        }
         mCreateReminder = (Button) findViewById(R.id.button_create_rem);
         mCreateReminder.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,8 +1,10 @@
 package edu.ohio_state.cse.nagger;
 
+import android.text.style.TtsSpan;
+
 import java.sql.Time;
 import java.util.Calendar;
-import java.util.Date;
+import java.sql.Date;
 import java.util.UUID;
 
 /**
@@ -11,22 +13,25 @@ import java.util.UUID;
 public class Reminder {
 
     private int mReminderID;
-    private String mReminderTitle;
+    private String mSender;
     private String mReminderDesc;
     private Date mDate;
     private java.sql.Time mTime;
 
-    public Reminder(String reminderTitle, String reminderDesc) {
-        mReminderID = (int)Math.random();
-        mReminderTitle = reminderTitle;
-        mReminderDesc = reminderDesc;
-        mDate = new Date();
-//        mTime = (Time)Calendar.getInstance().getTime();
+    public String getSender() {
+        return mSender;
     }
 
-    public Reminder(int reminderID, String reminderTitle, String reminderDesc, Date date, Time time) {
-        mReminderID = reminderID;
-        mReminderTitle = reminderTitle;
+    public Reminder(int reminderId,String sender,String reminderDesc, Date date, Time time) {
+        mReminderID = reminderId;
+        mSender = sender;
+        mReminderDesc = reminderDesc;
+        mDate = date;
+        mTime = time;
+    }
+
+    public Reminder(String sender,String reminderDesc, Date date, Time time) {
+        mSender = sender;
         mReminderDesc = reminderDesc;
         mDate = date;
         mTime = time;
@@ -35,10 +40,6 @@ public class Reminder {
 
     public int getReminderID() {
         return mReminderID;
-    }
-
-    public String getReminderTitle() {
-        return mReminderTitle;
     }
 
     public String getReminderDesc() {

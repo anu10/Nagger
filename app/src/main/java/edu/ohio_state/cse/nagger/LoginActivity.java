@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
         Log.d(TAG,"Inside Method OnCreate");
 
-        DatabaseHelper.setTableNAme(DatabaseHelper.USER_TABLE);
+        DatabaseHelper.setTableName(DatabaseHelper.USER_TABLE);
         databaseHelper = new DatabaseHelper(this);
         mGoogleTransactions = GoogleTransactions.getGoogleTransaction();
 
@@ -67,6 +67,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             mUser = userManager.createUser(account.getDisplayName(),account.getEmail());
             databaseHelper.insertUser(mUser.getEmail(),mUser.getUserName());
             startActivity(new Intent(this,ListActivity.class));
+            new FirebaseIDService().onTokenRefresh();
         }
         else
             Toast.makeText(this,"Wrong Email",Toast.LENGTH_SHORT).show();

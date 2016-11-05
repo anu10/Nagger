@@ -44,6 +44,7 @@ public class ListFragment extends Fragment {
     ReminderList reminderList;
     ContentResolver cr;
     ContentValues values;
+    private DatabaseHelper mDatabaseHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,8 @@ public class ListFragment extends Fragment {
 
         mCrimeRecyclerView = (RecyclerView) v.findViewById(R.id.reminder_recycler_view);
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mDatabaseHelper = new DatabaseHelper(getContext());
 
         updateUI();
 
@@ -140,7 +143,7 @@ public class ListFragment extends Fragment {
         public void bindReminder(Reminder reminder){
             mReminder = reminder;
             mReminderID.setText(String.valueOf(mReminder.getReminderID()));
-            mReminderTitle.setText(mReminder.getReminderTitle());
+            mReminderTitle.setText(mReminder.getSender());
             mReminderFrom.setText(mReminder.getReminderDesc());
             mReminderDate.setText(mReminder.getDate().toString());
 //            mReminderDate.setText(mReminder.getTime().toString());
@@ -156,7 +159,18 @@ public class ListFragment extends Fragment {
                     Update_Calendar(v,reminder);
                 }
                 case R.id.button_reject:{
-
+//                    Log.d("Delete", String.valueOf(reminder.getReminderID()));
+                    if(mDatabaseHelper.deleteReminder(reminder)){
+//                        Log.d("Delete","Delete Successful");
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent refresh = new Intent(getContext(),ListActivity.class);
+                                startActivity(refresh);
+                                getActivity().finish();
+                            }
+                        });
+                    }
                 }
             }
         }
@@ -210,7 +224,7 @@ public class ListFragment extends Fragment {
         values = new ContentValues();
         values.put(CalendarContract.Events.DTSTART,(new Date()).getTime() + 60 * 60 * 1);
         values.put(CalendarContract.Events.DTEND,(new Date()).getTime() + 60 * 60 * 10);
-        values.put(CalendarContract.Events.TITLE,reminder.getReminderTitle());
+        values.put(CalendarContract.Events.TITLE,reminder.getSender());
         values.put(CalendarContract.Events.DESCRIPTION,reminder.getReminderDesc());
         values.put(CalendarContract.Events.CALENDAR_ID,1);
         values.put(CalendarContract.Events.STATUS, CalendarContract.Events.STATUS_CONFIRMED);

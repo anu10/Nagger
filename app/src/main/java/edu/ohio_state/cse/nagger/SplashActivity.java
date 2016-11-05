@@ -48,8 +48,9 @@ public class SplashActivity extends FragmentActivity implements GoogleApiClient.
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d("piyush", refreshedToken+"");
 
-        DatabaseHelper.setTableNAme(DatabaseHelper.USER_TABLE);
+        DatabaseHelper.setTableName(DatabaseHelper.All_TABLE);
         databaseHelper = new DatabaseHelper(this);
+        DatabaseHelper.setTableName(DatabaseHelper.USER_TABLE);
         mGoogleTransactions = new GoogleTransactions(this);
         setContentView(R.layout.activity_splash);
         mImageView = (ImageView) findViewById(R.id.image_view);
@@ -87,7 +88,7 @@ public class SplashActivity extends FragmentActivity implements GoogleApiClient.
 
                 } finally {
                     finish();
-                    Cursor cur = databaseHelper.selectAll();
+                    Cursor cur = databaseHelper.selectAll(DatabaseHelper.USER_TABLE);
                     if (cur.getCount() <= 0) {
                         SplashActivity.this.runOnUiThread(new Runnable() {
                             @Override

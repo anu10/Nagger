@@ -9,93 +9,84 @@ import android.database.sqlite.SQLiteStatement;
 import java.sql.Time;
 import java.util.Date;
 
-
 public class DatabaseHelper {
+    public static final String All_TABLE = "All";
     private static final String DATABASE_NAME = "nagger.db";
     private static final int DATABASE_VERSION = 1;
-    public static final String USER_TABLE = "User";
-    public static final String REMINDER_TABLE = "Reminder";
+    private static final String INSERT_REMINDER = "insert into Reminder(sender, description, time, date) values (?,?,?,?)";
+    private static final String INSERT_USER = "insert into User(email, username) values (?,?)";
     public static final String NOTIFICATION_TABLE = "Notification";
-
+    public static final String REMINDER_TABLE = "Reminder";
+    public static final String USER_TABLE = "User";
+    private static String mTableName;
     private Context context;
     private SQLiteDatabase db;
     private SQLiteStatement insertStatement;
-    private static final String INSERT_USER = "insert into " + USER_TABLE + "(email, username) values (?,?)";
-    private static final String INSERT_REMINDER = "insert into " + REMINDER_TABLE + "(reminderId, title, description, time, date) values (?,?,?,?,?)";
-    private static final String INSERT_NOTIFICATION = "insert into" + NOTIFICATION_TABLE + "(reminderId, senderEmail, receiverEmail, Status) values (?,?,?,?)";
 
-    private static String mTableName;
-
-    public DatabaseHelper(Context context){
+    public DatabaseHelper(Context context) {
         this.context = context;
-        NaggerOpenHelper openHelper = new NaggerOpenHelper(context);
-        this.db = openHelper.getWritableDatabase();
+        this.db = new NaggerOpenHelper(context).getWritableDatabase();
     }
 
-    public static void setTableNAme(String mtablename){
+    public static void setTableName(String mtablename) {
         mTableName = mtablename;
     }
 
-    public long insertUser(String email, String username){
+    public long insertUser(String email, String username) {
         this.insertStatement = this.db.compileStatement(INSERT_USER);
-        this.insertStatement.bindString(1,email);
-        this.insertStatement.bindString(2,username);
+        this.insertStatement.bindString(1, email);
+        this.insertStatement.bindString(2, username);
         return this.insertStatement.executeInsert();
     }
 
-    public long insertReminder(String reminderId, String title, String description, Date date, Time time){
+    public long insertReminder(Reminder reminder) {
         this.insertStatement = this.db.compileStatement(INSERT_REMINDER);
-        this.insertStatement.bindString(1,reminderId);
-        this.insertStatement.bindString(2,title);
-        this.insertStatement.bindString(3,description);
-        this.insertStatement.bindString(4,date.toString());
-        this.insertStatement.bindString(5,time.toString());
+        this.insertStatement.bindString(1, reminder.getSender());
+        this.insertStatement.bindString(2, reminder.getReminderDesc());
+        this.insertStatement.bindString(3, reminder.getDate().toString());
+        this.insertStatement.bindString(4, reminder.getTime().toString());
         return this.insertStatement.executeInsert();
     }
 
-    public long insertNotification(String reminderId, String senderEmail, String receiverEmail, String status){
-        this.insertStatement = this.db.compileStatement(INSERT_REMINDER);
-        this.insertStatement.bindString(1,reminderId);
-        this.insertStatement.bindString(2,senderEmail);
-        this.insertStatement.bindString(3,receiverEmail);
-        this.insertStatement.bindString(4,status);
-        return this.insertStatement.executeInsert();
-    }
-    public Cursor selectAll()
-    {
-        Cursor cur = db.rawQuery("SELECT * FROM USER", null);
+    public Cursor selectAll(String tableName) {
+//        return this.db.rawQuery("SELECT * FROM " + tableName, null);
+        Cursor cur = db.rawQuery("SELECT * FROM " + tableName, null);
         return cur;
     }
 
+    public boolean deleteReminder(Reminder reminder){
+        return db.delete(REMINDER_TABLE,
+                "reminderId = " + String.valueOf(reminder.getReminderID()),null) > 0;
+    }
 
-    private static class NaggerOpenHelper extends SQLiteOpenHelper{
-
-        NaggerOpenHelper(Context context){
-            super(context,DATABASE_NAME,null,DATABASE_VERSION);
+    private static class NaggerOpenHelper extends SQLiteOpenHelper {
+        NaggerOpenHelper(Context context) {
+            super(context, DatabaseHelper.DATABASE_NAME, null, DatabaseHelper.DATABASE_VERSION);
         }
 
-        @Override
-        public void onCreate(SQLiteDatabase db){
-            switch (mTableName){
-                case USER_TABLE:{
-                    db.execSQL("CREATE TABLE " + USER_TABLE + "(email TEXT PRIMARY KEY, username TEXT)");
-                    break;
-                }
-                case REMINDER_TABLE:{
-                    db.execSQL("CREATE TABLE " + REMINDER_TABLE + "(reminderId TEXT PRIMARY KEY, title TEXT, description TEXT, date DATE, time TIME)");
-                    break;
-                }
-                case NOTIFICATION_TABLE:{
-                    db.execSQL("CREATE TABLE " + NOTIFICATION_TABLE + "(reminderId TEXT PRIMARY KEY, senderEmail TEXT, receiverEmail TEXT, status TEXT)");
-                    break;
-                }
+        public void onCreate(SQLiteDatabase db) {
+            mTableName = DatabaseHelper.mTableName;
+            switch (mTableName) {
+                case USER_TABLE:
+                    db.execSQL("CREATE TABLE User(email VARCHAR(50) PRIMARY KEY, username VARCHAR(50))");
+                    return;
+                case REMINDER_TABLE:
+                    db.execSQL("CREATE TABLE Reminder(reminderId INTEGER PRIMARY KEY AUTOINCREMENT, sender VARCHAR(50), description TEXT, date DATE, time TIME)");
+                    return;
+                case NOTIFICATION_TABLE:
+                    db.execSQL("CREATE TABLE Notification(reminderId TEXT PRIMARY KEY, senderEmail TEXT, receiverEmail TEXT, status TEXT)");
+                    return;
+                case All_TABLE:
+                    db.execSQL("CREATE TABLE User(email VARCHAR(50) PRIMARY KEY, username VARCHAR(50))");
+                    db.execSQL("CREATE TABLE Reminder(reminderId INTEGER PRIMARY KEY AUTOINCREMENT, sender VARCHAR(50), description TEXT, date DATE, time TIME)");
+                    return;
+                default:
+                    return;
             }
         }
 
-
-
         @Override
-        public void onUpgrade(SQLiteDatabase db , int oldVersion, int newVersion){
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             switch (mTableName) {
                 case USER_TABLE: {
                     db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE);
