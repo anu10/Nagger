@@ -23,19 +23,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.io.IOException;
+import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -43,9 +48,12 @@ import okhttp3.Response;
  */
 public class CreateReminderFragment extends Fragment implements SensorEventListener {
 
+    private User mUser;
     private Button mSendReminder;
     private EditText mRecipientText;
     private EditText mDescriptionText;
+    private DatePicker mDate;
+    private TimePicker mTime;
     ContentResolver cr;
     ContentValues values;
     String projection[] = {"_id", "calendar_displayName"};
@@ -71,14 +79,17 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.create_reminder_fragment, container, false);
 //        return super.onCreateView(inflater, container, savedInstanceState);
+        mUser = UserManager.getUser();
         mSendReminder = (Button) v.findViewById(R.id.button_send_reminder);
         mRecipientText = (EditText) v.findViewById(R.id.recipient_text);
         mDescriptionText = (EditText) v.findViewById(R.id.description_text);
+        mDate = (DatePicker) v.findViewById(R.id.date);
+        mTime = (TimePicker) v.findViewById(R.id.time);
         mSendReminder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                Insert Here for Sending to Sever
-//                sendServer();
+                sendServer();
             }
         });
         return v;
@@ -131,19 +142,25 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
             @Override
             protected Void doInBackground(Void... params) {
                 OkHttpClient mClient = new OkHttpClient();
-//        FirebaseMessaging fm = FirebaseMessaging.getInstance();
-                String emailAddress = "eeqUrb08aAM:APA91bHyS0KsCt1R0qODBpE4JZ49AlOJOuVvLVE48stxYDo8zSt5W7mn7MJQhuMXM_labRKvDfjSt_y5wRaJYsV8GcpzgZ-Z-kHJ4tz3W_rjmgDALvg1m7z7qDofjUQHsNVSMG-uwQ_8";
+                RequestBody requestBody = new FormBody.Builder().
+                        add("Sender", mUser.getUserName()).
+                        add("Email",String.valueOf(mRecipientText)).
+                        add("Description",String.valueOf(mDescriptionText)).
+                        add("Date",String.valueOf(mDate)).
+                        add("Time",String.valueOf(mTime)).build();
+
+//                String emailAddress = "eeqUrb08aAM:APA91bHyS0KsCt1R0qODBpE4JZ49AlOJOuVvLVE48stxYDo8zSt5W7mn7MJQhuMXM_labRKvDfjSt_y5wRaJYsV8GcpzgZ-Z-kHJ4tz3W_rjmgDALvg1m7z7qDofjUQHsNVSMG-uwQ_8";
                 try {
-                    mClient.newCall(new Request.Builder().get().url("http://192.168.0.20/index1.php?user_id=" + emailAddress + "&message=asdlkfjasdlkfjalsdfkjaslfj").build()).execute();
+                    mClient.newCall(new Request.Builder().url("http://192.168.0.9/index1.php").
+                    post(requestBody).build()).execute();
+//                    mClient.newCall(new Request.Builder().get().url("http://192.168.0.9/index1.php?user_id=" + emailAddress + "&message=asdlkfjasdlkfjalsdfkjaslfj").build()).execute();
                 } catch (IOException e) {
                     Log.e("CreateReminderFragment", "Unable to send message", e);
                 }
                 return null;
             }
+
         };
         asyncTask.execute();
-
-//        fm.send(new RemoteMessage.Builder("").setMessageId("1").addData("my message", "Hello")
-//                .addData("my_action", "Hello").build());
     }
 }
