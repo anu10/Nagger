@@ -24,9 +24,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import okhttp3.OkHttpClient;
 
 /**
  * Created by Sayam Ganguly on 10/21/2016.
@@ -68,6 +73,7 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
             @Override
             public void onClick(View v) {
 //                Insert Here for Sending to Sever
+                sendServer();
             }
         });
         return v;
@@ -111,5 +117,13 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
     public void onResume() {
         super.onResume();
         senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    public void sendServer(){
+        OkHttpClient mClient = new OkHttpClient();
+        FirebaseMessaging fm = FirebaseMessaging.getInstance();
+        fm.send(new RemoteMessage.Builder("").setMessageId("1").addData("my message","Hello")
+        .addData("my_action","Hello").build());
+
     }
 }

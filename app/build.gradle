@@ -34,5 +34,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'com.google.android.gms:play-services-appindexing:9.6.1'
     compile 'com.google.apis:google-api-services-calendar:v3-rev220-1.22.0'
+    compile 'com.squareup.okhttp3:okhttp:3.0.1'
 }
 apply plugin: 'com.google.gms.google-services'
