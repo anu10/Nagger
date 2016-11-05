@@ -11,6 +11,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
@@ -28,10 +29,14 @@ import android.widget.Toast;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by Sayam Ganguly on 10/21/2016.
@@ -43,7 +48,7 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
     private EditText mDescriptionText;
     ContentResolver cr;
     ContentValues values;
-    String projection[] =  {"_id", "calendar_displayName"};
+    String projection[] = {"_id", "calendar_displayName"};
     android.net.Uri calendars;
 
     private SensorManager senSensorManager;
@@ -59,7 +64,7 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
 
         senSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
+        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
@@ -73,7 +78,7 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
             @Override
             public void onClick(View v) {
 //                Insert Here for Sending to Sever
-                sendServer();
+//                sendServer();
             }
         });
         return v;
@@ -82,7 +87,7 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
     @Override
     public void onSensorChanged(SensorEvent event) {
         Sensor mySensor = event.sensor;
-        if(mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             float x = event.values[0];
             float y = event.values[1];
             float z = event.values[2];
@@ -94,7 +99,7 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
                 lastUpdate = curTime;
                 float speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
                 if (speed > SHAKE_THRESHOLD) {
-//                    Same method needs to be called as button click
+                    sendServer();
                 }
                 last_x = x;
                 last_y = y;
@@ -113,6 +118,7 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
         super.onPause();
         senSensorManager.unregisterListener(this);
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -120,11 +126,24 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
     }
 
 
-    public void sendServer(){
-        OkHttpClient mClient = new OkHttpClient();
-        FirebaseMessaging fm = FirebaseMessaging.getInstance();
-        fm.send(new RemoteMessage.Builder("").setMessageId("1").addData("my message","Hello")
-        .addData("my_action","Hello").build());
+    public void sendServer() {
+        AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                OkHttpClient mClient = new OkHttpClient();
+//        FirebaseMessaging fm = FirebaseMessaging.getInstance();
+                String emailAddress = "eeqUrb08aAM:APA91bHyS0KsCt1R0qODBpE4JZ49AlOJOuVvLVE48stxYDo8zSt5W7mn7MJQhuMXM_labRKvDfjSt_y5wRaJYsV8GcpzgZ-Z-kHJ4tz3W_rjmgDALvg1m7z7qDofjUQHsNVSMG-uwQ_8";
+                try {
+                    mClient.newCall(new Request.Builder().get().url("http://192.168.0.20/index1.php?user_id=" + emailAddress + "&message=asdlkfjasdlkfjalsdfkjaslfj").build()).execute();
+                } catch (IOException e) {
+                    Log.e("CreateReminderFragment", "Unable to send message", e);
+                }
+                return null;
+            }
+        };
+        asyncTask.execute();
 
+//        fm.send(new RemoteMessage.Builder("").setMessageId("1").addData("my message", "Hello")
+//                .addData("my_action", "Hello").build());
     }
 }
