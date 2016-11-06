@@ -157,22 +157,26 @@ public class ListFragment extends Fragment {
             switch (v.getId()){
                 case R.id.button_accept:{
                     Update_Calendar(v,reminder);
+                    break;
                 }
                 case R.id.button_reject:{
 //                    Log.d("Delete", String.valueOf(reminder.getReminderID()));
                     if(mDatabaseHelper.deleteReminder(reminder)){
 //                        Log.d("Delete","Delete Successful");
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent refresh = new Intent(getContext(),ListActivity.class);
-                                startActivity(refresh);
-                                getActivity().finish();
-                            }
-                        });
+//                        getActivity().runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                Intent refresh = new Intent(getContext(),ListActivity.class);
+//                                startActivity(refresh);
+//                                getActivity().finish();
+//                            }
+//                        });
+                        break;
                     }
                 }
             }
+            reminderList.removeReminder(reminder);
+            mAdapter.notifyItemRemoved(getAdapterPosition());
         }
     }
 

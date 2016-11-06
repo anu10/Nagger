@@ -28,9 +28,9 @@ public class ReminderList {
     private ReminderList(Context context){
         mReminders = new ArrayList<Reminder>();
         Reminder reminder;
-//        reminder = new Reminder("Sayam","Meet me tmorrow",new Date(System.currentTimeMillis()),
-//                                new Time(System.currentTimeMillis()));
         mDatabaseHelper = new DatabaseHelper(context);
+//        reminder = new Reminder("Sayam","Meet me tmorrow",new Date(System.currentTimeMillis()),
+//                new Time(System.currentTimeMillis()));
 //        mDatabaseHelper.insertReminder(reminder);
         Cursor cursor = mDatabaseHelper.selectAll(DatabaseHelper.REMINDER_TABLE);
         if(cursor.getCount() >= 1){
@@ -56,5 +56,9 @@ public class ReminderList {
                 return reminder;
         }
         return null;
+    }
+
+    public void removeReminder(Reminder reminder){
+        mReminders.remove(reminder);
     }
 }
