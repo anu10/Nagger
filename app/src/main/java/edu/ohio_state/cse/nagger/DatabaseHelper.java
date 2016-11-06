@@ -25,7 +25,7 @@ public class DatabaseHelper {
 
     public DatabaseHelper(Context context) {
         this.context = context;
-        this.db = new NaggerOpenHelper(context).getWritableDatabase();
+        this.db = new NaggerOpenHelper(this.context).getWritableDatabase();
     }
 
     public static void setTableName(String mtablename) {
@@ -49,7 +49,6 @@ public class DatabaseHelper {
     }
 
     public Cursor selectAll(String tableName) {
-//        return this.db.rawQuery("SELECT * FROM " + tableName, null);
         Cursor cur = db.rawQuery("SELECT * FROM " + tableName, null);
         return cur;
     }

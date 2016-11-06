@@ -29,8 +29,9 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.sql.Time;
 import java.util.Calendar;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -66,7 +67,6 @@ public class ListFragment extends Fragment {
             }
         });
         TextView textview = (TextView) v.findViewById(R.id.welcome_message);
-        textview.setText("Welcome " + mUser.getUserName() + "!! Right now you don't have any reminders");
         setHasOptionsMenu(true);
 
         mCrimeRecyclerView = (RecyclerView) v.findViewById(R.id.reminder_recycler_view);
@@ -74,7 +74,10 @@ public class ListFragment extends Fragment {
 
         mDatabaseHelper = new DatabaseHelper(getContext());
 
-        updateUI();
+        if(updateUI())
+            textview.setText("Welcome " + mUser.getUserName() + "!! You have following reminders");
+        else
+            textview.setText("Welcome " + mUser.getUserName() + "!! Right now you don't have any reminders");
 
         return v;
     }
@@ -146,7 +149,7 @@ public class ListFragment extends Fragment {
             mReminderTitle.setText(mReminder.getSender());
             mReminderFrom.setText(mReminder.getReminderDesc());
             mReminderDate.setText(mReminder.getDate().toString());
-//            mReminderDate.setText(mReminder.getTime().toString());
+            mReminderDate.setText(mReminder.getTime().toString());
         }
 
         @Override
@@ -162,15 +165,7 @@ public class ListFragment extends Fragment {
                 case R.id.button_reject:{
 //                    Log.d("Delete", String.valueOf(reminder.getReminderID()));
                     if(mDatabaseHelper.deleteReminder(reminder)){
-//                        Log.d("Delete","Delete Successful");
-//                        getActivity().runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                Intent refresh = new Intent(getContext(),ListActivity.class);
-//                                startActivity(refresh);
-//                                getActivity().finish();
-//                            }
-//                        });
+                        Toast.makeText(getContext(),"Delete Successful",Toast.LENGTH_SHORT).show();
                         break;
                     }
                 }
@@ -207,27 +202,38 @@ public class ListFragment extends Fragment {
         }
     }
 
-    public void updateUI(){
+    public boolean updateUI(){
         reminderList = ReminderList.get(getActivity());
         List<Reminder> reminders = reminderList.getReminders();
 
         mAdapter = new ReminderAdapter(reminders);
         mCrimeRecyclerView.setAdapter(mAdapter);
+        return !reminders.isEmpty();
     }
 
     public void Update_Calendar(View v,Reminder reminder){
-        long startMillis = 0;
-        long endMillis = 0;
-        Calendar beginTime = Calendar.getInstance();
-        beginTime.set(2016, 11, 14, 7, 30);
-        startMillis = beginTime.getTimeInMillis();
-        Calendar endTime = Calendar.getInstance();
-        endTime.set(2016, 11, 14, 7, 45);
-        endMillis = endTime.getTimeInMillis();
+//        long startMillis = 0;
+//        long endMillis = 0;
+//        Calendar beginTime = Calendar.getInstance();
+//        beginTime.set(2016, 11, 14, 7, 30);
+//        startMillis = beginTime.getTimeInMillis();
+//        Calendar endTime = Calendar.getInstance();
+//        endTime.set(2016, 11, 14, 7, 45);
+//        endMillis = endTime.getTimeInMillis();
+//        values.put(CalendarContract.Events.DTEND,(new Date()).getTime() + 60 * 60 * 10);
+//        values.put(CalendarContract.Events.DTSTART,(new Date()).getTime() + 60 * 60 * 1);
+        Date date = reminder.getDate();
+        Time time = reminder.getTime();
+        Calendar eventTime = Calendar.getInstance();
+        eventTime.setTime(date);
+        Calendar cal = Calendar.getInstance();
+        eventTime.set(eventTime.get(Calendar.YEAR),eventTime.get(Calendar.MONTH),eventTime.get(Calendar.DATE),
+                time.getHours(),time.getMinutes());
+        long startMillis = eventTime.getTimeInMillis();
         cr = v.getContext().getContentResolver();
         values = new ContentValues();
-        values.put(CalendarContract.Events.DTSTART,(new Date()).getTime() + 60 * 60 * 1);
-        values.put(CalendarContract.Events.DTEND,(new Date()).getTime() + 60 * 60 * 10);
+        values.put(CalendarContract.Events.DTSTART,startMillis);
+        values.put(CalendarContract.Events.DTEND,startMillis);
         values.put(CalendarContract.Events.TITLE,reminder.getSender());
         values.put(CalendarContract.Events.DESCRIPTION,reminder.getReminderDesc());
         values.put(CalendarContract.Events.CALENDAR_ID,1);
@@ -239,8 +245,10 @@ public class ListFragment extends Fragment {
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{android.Manifest.permission.WRITE_CALENDAR}, 1);
         }
-        else
+        else {
             cr.insert(CalendarContract.Events.CONTENT_URI, values);
+            Toast.makeText(getContext(),"Update Successful",Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -251,8 +259,10 @@ public class ListFragment extends Fragment {
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
                             android.Manifest.permission.WRITE_CALENDAR);
-                    if(permissionCheck == PackageManager.PERMISSION_GRANTED)
+                    if(permissionCheck == PackageManager.PERMISSION_GRANTED) {
                         cr.insert(CalendarContract.Events.CONTENT_URI, values);
+                        Toast.makeText(getContext(), "Update Successful", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         }

@@ -29,21 +29,17 @@ public class ReminderList {
         mReminders = new ArrayList<Reminder>();
         Reminder reminder;
         mDatabaseHelper = new DatabaseHelper(context);
-//        reminder = new Reminder("Sayam","Meet me tmorrow",new Date(System.currentTimeMillis()),
-//                new Time(System.currentTimeMillis()));
-//        mDatabaseHelper.insertReminder(reminder);
+        reminder = new Reminder("Sayam","Meet me tmorrow",new Date(System.currentTimeMillis()),
+                new Time(System.currentTimeMillis()));
+        mDatabaseHelper.insertReminder(reminder);
         Cursor cursor = mDatabaseHelper.selectAll(DatabaseHelper.REMINDER_TABLE);
         if(cursor.getCount() >= 1){
             while(cursor.moveToNext()){
-//                String name = cursor.getString(1);
                 reminder = new Reminder(Integer.parseInt(cursor.getString(0)),cursor.getString(1),cursor.getString(2),
                         new Date(System.currentTimeMillis()),new Time(System.currentTimeMillis()));
                 mReminders.add(reminder);
             }
         }
-//        for(int i = 1; i <= 20 ; i++){
-//            reminder = new Reminder("Title #" + i,"Descrption #" + i);
-//        }
     }
 
     public List<Reminder> getReminders(){
