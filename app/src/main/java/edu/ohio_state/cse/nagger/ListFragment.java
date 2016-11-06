@@ -163,7 +163,6 @@ public class ListFragment extends Fragment {
                     break;
                 }
                 case R.id.button_reject:{
-//                    Log.d("Delete", String.valueOf(reminder.getReminderID()));
                     if(mDatabaseHelper.deleteReminder(reminder)){
                         Toast.makeText(getContext(),"Delete Successful",Toast.LENGTH_SHORT).show();
                         break;

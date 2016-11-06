@@ -49,6 +49,9 @@ import okhttp3.Response;
 public class CreateReminderFragment extends Fragment implements SensorEventListener {
 
     private User mUser;
+    private Reminder mRemnider;
+    private String mEmail;
+    String desc;
     private Button mSendReminder;
     private EditText mRecipientText;
     private EditText mDescriptionText;
@@ -138,20 +141,23 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
 
 
     public void sendServer() {
+        mEmail = mRecipientText.getText().toString();
+        desc = mDescriptionText.getText().toString();
         AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 OkHttpClient mClient = new OkHttpClient();
                 RequestBody requestBody = new FormBody.Builder().
                         add("Sender", mUser.getUserName()).
-                        add("Email",String.valueOf(mRecipientText)).
-                        add("Description",String.valueOf(mDescriptionText)).
-                        add("Date",String.valueOf(mDate)).
-                        add("Time",String.valueOf(mTime)).build();
+                        add("Email",mEmail).
+//                        add("Email",String.valueOf(mRecipientText)).
+                        add("Description",desc).
+                        add("Date",new Date().toString()).
+                        add("Time",new Time(10,10,10).toString()).build();
 
 //                String emailAddress = "eeqUrb08aAM:APA91bHyS0KsCt1R0qODBpE4JZ49AlOJOuVvLVE48stxYDo8zSt5W7mn7MJQhuMXM_labRKvDfjSt_y5wRaJYsV8GcpzgZ-Z-kHJ4tz3W_rjmgDALvg1m7z7qDofjUQHsNVSMG-uwQ_8";
                 try {
-                    mClient.newCall(new Request.Builder().url("http://192.168.0.21/sendpush.php").
+                    mClient.newCall(new Request.Builder().url("http://192.168.0.9/sendpush.php").
                     post(requestBody).build()).execute();
 //                    mClient.newCall(new Request.Builder().get().url("http://192.168.0.9/index1.php?user_id=" + emailAddress + "&message=asdlkfjasdlkfjalsdfkjaslfj").build()).execute();
                 } catch (IOException e) {
