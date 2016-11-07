@@ -29,9 +29,9 @@ public class ReminderList {
         mReminders = new ArrayList<Reminder>();
         Reminder reminder;
         mDatabaseHelper = new DatabaseHelper(context);
-        reminder = new Reminder("Sayam","Meet me tmorrow",new Date(System.currentTimeMillis()),
-                new Time(System.currentTimeMillis()));
-        mDatabaseHelper.insertReminder(reminder);
+//        reminder = new Reminder("Sayam","Meet me tmorrow",new Date(System.currentTimeMillis()),
+//                new Time(System.currentTimeMillis()));
+//        mDatabaseHelper.insertReminder(reminder);
         Cursor cursor = mDatabaseHelper.selectAll(DatabaseHelper.REMINDER_TABLE);
         if(cursor.getCount() >= 1){
             while(cursor.moveToNext()){

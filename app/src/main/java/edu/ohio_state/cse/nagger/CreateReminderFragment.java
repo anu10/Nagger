@@ -33,6 +33,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.io.IOException;
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -147,13 +148,14 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
             @Override
             protected Void doInBackground(Void... params) {
                 OkHttpClient mClient = new OkHttpClient();
+                Calendar calendar = Calendar.getInstance();
                 RequestBody requestBody = new FormBody.Builder().
                         add("Sender", mUser.getUserName()).
                         add("Email",mEmail).
 //                        add("Email",String.valueOf(mRecipientText)).
                         add("Description",desc).
-                        add("Date",new Date().toString()).
-                        add("Time",new Time(10,10,10).toString()).build();
+                        add("Date", new SimpleDateFormat("MM/dd/yyyy").format(new Date())).
+                        add("Time",String.format("%02d:%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND))).build();
 
 //                String emailAddress = "eeqUrb08aAM:APA91bHyS0KsCt1R0qODBpE4JZ49AlOJOuVvLVE48stxYDo8zSt5W7mn7MJQhuMXM_labRKvDfjSt_y5wRaJYsV8GcpzgZ-Z-kHJ4tz3W_rjmgDALvg1m7z7qDofjUQHsNVSMG-uwQ_8";
                 try {

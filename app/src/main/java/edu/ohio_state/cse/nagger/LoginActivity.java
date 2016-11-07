@@ -10,6 +10,7 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.SignInButton;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -67,7 +68,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             mUser = userManager.createUser(account.getDisplayName(),account.getEmail());
             databaseHelper.insertUser(mUser.getEmail(),mUser.getUserName());
             startActivity(new Intent(this,ListActivity.class));
-            new FirebaseIDService().onTokenRefresh();
+            FirebaseIDService.sendRegistrationToServer(FirebaseInstanceId.getInstance().getToken());
         }
         else
             Toast.makeText(this,"Wrong Email",Toast.LENGTH_SHORT).show();

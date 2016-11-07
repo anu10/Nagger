@@ -31,7 +31,7 @@ import org.w3c.dom.Text;
 
 import java.sql.Time;
 import java.util.Calendar;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -149,7 +149,7 @@ public class ListFragment extends Fragment {
             mReminderTitle.setText(mReminder.getSender());
             mReminderFrom.setText(mReminder.getReminderDesc());
             mReminderDate.setText(mReminder.getDate().toString());
-            mReminderDate.setText(mReminder.getTime().toString());
+            mReminderTime.setText(mReminder.getTime().toString());
         }
 
         @Override

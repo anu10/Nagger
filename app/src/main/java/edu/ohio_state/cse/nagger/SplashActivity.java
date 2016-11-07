@@ -45,8 +45,8 @@ public class SplashActivity extends FragmentActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startIntentService();
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d("piyush", refreshedToken+"");
+//        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+//        Log.d("piyush", refreshedToken+"");
 
         DatabaseHelper.setTableName(DatabaseHelper.All_TABLE);
         databaseHelper = new DatabaseHelper(this);
