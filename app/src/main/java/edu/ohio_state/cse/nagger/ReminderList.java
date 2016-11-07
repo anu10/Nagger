@@ -8,9 +8,7 @@ import java.util.List;
 import java.sql.Date;
 import java.sql.Time;
 
-/**
- * Created by Sayam Ganguly on 10/19/2016.
- */
+
 public class ReminderList {
 
     private static ReminderList sReminderList;

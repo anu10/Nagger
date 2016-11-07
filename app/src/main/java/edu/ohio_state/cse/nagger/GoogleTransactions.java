@@ -35,7 +35,7 @@ public class GoogleTransactions {
     }
 
     public boolean signOut(){
-        Log.d("harsh", "IsSignin api null ? " + (mGoogleApiClient == null));
+        Log.d("Signout", "IsSignin api null ? " + (mGoogleApiClient == null));
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
             @Override

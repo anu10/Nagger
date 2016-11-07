@@ -3,9 +3,6 @@ package edu.ohio_state.cse.nagger;
 import java.sql.Time;
 import java.util.Date;
 
-/**
- * Created by Sayam Ganguly on 10/19/2016.
- */
 public class Reminder {
 
     private int mReminderID;
