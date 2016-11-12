@@ -26,16 +26,24 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Log.d(TAG,remoteMessage.getData().get("Sender"));
         Log.d(TAG, "From: " + remoteMessage.getFrom());
-        Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
+        Log.d(TAG, "Notification From: " + remoteMessage.getData().get("Sender"));
+//        Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
         try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             mReminder = new Reminder(remoteMessage.getData().get("Sender"),remoteMessage.getData().get("Description"),
                     simpleDateFormat.parse(remoteMessage.getData().get("Date")), Time.valueOf(remoteMessage.getData().get("Time")));
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        DatabaseHelper.setTableName("Reminder");
+        System.out.println("In Here");
+        Log.d("5236","In Here");
+        DatabaseHelper.setTableName(DatabaseHelper.REMINDER_TABLE);
         mDatabaseHelper = new DatabaseHelper(this);
         mDatabaseHelper.insertReminder(mReminder);
+        ReminderList reminderList = ReminderList.get(this);
+        reminderList.updateReminderList(mReminder);
     }
+
+
+
 }

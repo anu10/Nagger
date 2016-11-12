@@ -20,7 +20,7 @@ public class FirebaseIDService extends FirebaseInstanceIdService {
     public void onTokenRefresh() {
         // Get updated InstanceID token.
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.e(TAG, "Refreshed token: " + refreshedToken);
+        Log.e(TAG, "Harsh Refreshed token: " + refreshedToken);
 
         // TODO: Implement this method to send any registration to your app's servers.
         sendRegistrationToServer(refreshedToken);
@@ -49,7 +49,7 @@ public class FirebaseIDService extends FirebaseInstanceIdService {
                             add("Email", user.getEmail()).
                             add("Token", refreshedToken).build();
                     try {
-                        mClient.newCall(new Request.Builder().url("http://192.168.0.9/storeUser.php").
+                        mClient.newCall(new Request.Builder().url("http://192.168.3.189/storeUser.php").
                                 post(requestBody).build()).execute();
                         Log.e(FirebaseIDService.class.getName(), "Sent token to server");
                     } catch (IOException e) {

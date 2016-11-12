@@ -13,11 +13,11 @@ public class DatabaseHelper {
     public static final String All_TABLE = "All";
     private static final String DATABASE_NAME = "nagger.db";
     private static final int DATABASE_VERSION = 1;
-    private static final String INSERT_REMINDER = "insert into Reminder(sender, description, time, date) values (?,?,?,?)";
+    private static final String INSERT_REMINDER = "insert into Reminder(sender, description, date, time) values (?,?,?,?)";
     private static final String INSERT_USER = "insert into User(email, username) values (?,?)";
     public static final String NOTIFICATION_TABLE = "Notification";
-    public static final String REMINDER_TABLE = "Reminder";
-    public static final String USER_TABLE = "User";
+    public static final String REMINDER_TABLE = "Reminder1";
+    public static final String USER_TABLE = "User1";
     private static String mTableName;
     private Context context;
     private SQLiteDatabase db;

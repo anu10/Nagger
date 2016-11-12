@@ -46,6 +46,7 @@ public class ListFragment extends Fragment {
     ContentResolver cr;
     ContentValues values;
     private DatabaseHelper mDatabaseHelper;
+    private TextView textview;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class ListFragment extends Fragment {
                 signOut();
             }
         });
-        TextView textview = (TextView) v.findViewById(R.id.welcome_message);
+        textview = (TextView) v.findViewById(R.id.welcome_message);
         setHasOptionsMenu(true);
 
         mCrimeRecyclerView = (RecyclerView) v.findViewById(R.id.reminder_recycler_view);
@@ -116,7 +117,16 @@ public class ListFragment extends Fragment {
     public void onResume() {
         mGoogleTransactions = GoogleTransactions.getGoogleTransaction();
         super.onResume();
+        Log.d("Daya","Kuch to hain");
+        if(updateUI())
+            textview.setText("Welcome " + mUser.getUserName() + "!! You have following reminders");
+        else
+            textview.setText("Welcome " + mUser.getUserName() + "!! Right now you don't have any reminders");
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     private class ReminderHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

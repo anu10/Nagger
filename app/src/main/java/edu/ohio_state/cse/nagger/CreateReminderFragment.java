@@ -18,6 +18,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.media.MediaDescriptionCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,6 +61,8 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
     ContentValues values;
     String projection[] = {"_id", "calendar_displayName"};
     android.net.Uri calendars;
+    int year,month,day,hour,minute;
+    String formatedDate;
 
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
@@ -142,6 +145,16 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
     public void sendServer() {
         mEmail = mRecipientText.getText().toString();
         desc = mDescriptionText.getText().toString();
+        day  = mDate.getDayOfMonth();
+        month= mDate.getMonth();
+        year = mDate.getYear();
+        hour = mTime.getCurrentHour();
+        minute = mTime.getCurrentMinute();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        formatedDate = sdf.format(new Date(year-1900, month, day));
+//        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+//        String formatted = format.format();
+//        Log.d("Date","Hour " + hour + "Minute " + minute);
         AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -152,12 +165,13 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
                         add("Email",mEmail).
 //                        add("Email",String.valueOf(mRecipientText)).
                         add("Description",desc).
-                        add("Date", new SimpleDateFormat("MM/dd/yyyy").format(new Date())).
-                        add("Time",String.format("%02d:%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND))).build();
+                        add("Date", formatedDate).
+                        add("Time",String.format("%02d:%02d:%02d",hour,minute,calendar.get(Calendar.SECOND))).build();
+//                        add("Time",String.format("%02d:%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND))).build();
 
 //                String emailAddress = "eeqUrb08aAM:APA91bHyS0KsCt1R0qODBpE4JZ49AlOJOuVvLVE48stxYDo8zSt5W7mn7MJQhuMXM_labRKvDfjSt_y5wRaJYsV8GcpzgZ-Z-kHJ4tz3W_rjmgDALvg1m7z7qDofjUQHsNVSMG-uwQ_8";
                 try {
-                    mClient.newCall(new Request.Builder().url("http://192.168.0.9/sendpush.php").
+                    mClient.newCall(new Request.Builder().url("http://192.168.3.189/sendpush.php").
                     post(requestBody).build()).execute();
 //                    mClient.newCall(new Request.Builder().get().url("http://192.168.0.9/index1.php?user_id=" + emailAddress + "&message=asdlkfjasdlkfjalsdfkjaslfj").build()).execute();
                 } catch (IOException e) {

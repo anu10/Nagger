@@ -2,6 +2,8 @@ package edu.ohio_state.cse.nagger;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -42,6 +44,11 @@ public class ReminderList {
 
     public List<Reminder> getReminders(){
         return mReminders;
+    }
+
+    public void updateReminderList(Reminder reminder){
+//        Log.d("Abhi","Reminder update");
+        mReminders.add(reminder);
     }
 
     public Reminder getSingleReminder(int reminderID){
