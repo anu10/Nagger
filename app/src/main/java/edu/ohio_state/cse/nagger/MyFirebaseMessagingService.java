@@ -1,8 +1,11 @@
 package edu.ohio_state.cse.nagger;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -35,15 +38,33 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        System.out.println("In Here");
-        Log.d("5236","In Here");
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.nagger)
+                        .setContentTitle(mReminder.getSender())
+                        .setContentText(mReminder.getReminderDesc());
+
+        Intent resultIntent = new Intent(this, SplashActivity.class).putExtra("NoSplash",true);
+
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(
+                        this,
+                        0,
+                        resultIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+
+        int mNotificationId = 001;
+        NotificationManager mNotifyMgr =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+
         DatabaseHelper.setTableName(DatabaseHelper.REMINDER_TABLE);
         mDatabaseHelper = new DatabaseHelper(this);
         mDatabaseHelper.insertReminder(mReminder);
         ReminderList reminderList = ReminderList.get(this);
         reminderList.updateReminderList(mReminder);
     }
-
-
-
 }

@@ -49,7 +49,8 @@ public class FirebaseIDService extends FirebaseInstanceIdService {
                             add("Email", user.getEmail()).
                             add("Token", refreshedToken).build();
                     try {
-                        mClient.newCall(new Request.Builder().url("http://192.168.3.189/storeUser.php").
+                        mClient.retryOnConnectionFailure();
+                        mClient.newCall(new Request.Builder().url("http://192.168.0.9/storeUser.php").
                                 post(requestBody).build()).execute();
                         Log.e(FirebaseIDService.class.getName(), "Sent token to server");
                     } catch (IOException e) {

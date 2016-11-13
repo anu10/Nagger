@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.hardware.Sensor;
@@ -159,6 +160,7 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
             @Override
             protected Void doInBackground(Void... params) {
                 OkHttpClient mClient = new OkHttpClient();
+                mClient.retryOnConnectionFailure();
                 Calendar calendar = Calendar.getInstance();
                 RequestBody requestBody = new FormBody.Builder().
                         add("Sender", mUser.getUserName()).
@@ -167,20 +169,22 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
                         add("Description",desc).
                         add("Date", formatedDate).
                         add("Time",String.format("%02d:%02d:%02d",hour,minute,calendar.get(Calendar.SECOND))).build();
+//                Toast.makeText(getActivity(),"Reminder Sent!",Toast.LENGTH_SHORT).show();
 //                        add("Time",String.format("%02d:%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND))).build();
 
 //                String emailAddress = "eeqUrb08aAM:APA91bHyS0KsCt1R0qODBpE4JZ49AlOJOuVvLVE48stxYDo8zSt5W7mn7MJQhuMXM_labRKvDfjSt_y5wRaJYsV8GcpzgZ-Z-kHJ4tz3W_rjmgDALvg1m7z7qDofjUQHsNVSMG-uwQ_8";
                 try {
-                    mClient.newCall(new Request.Builder().url("http://192.168.3.189/sendpush.php").
+                    mClient.newCall(new Request.Builder().url("http://192.168.0.9/sendpush.php").
                     post(requestBody).build()).execute();
 //                    mClient.newCall(new Request.Builder().get().url("http://192.168.0.9/index1.php?user_id=" + emailAddress + "&message=asdlkfjasdlkfjalsdfkjaslfj").build()).execute();
                 } catch (IOException e) {
                     Log.e("CreateReminderFragment", "Unable to send message", e);
+//                    Toast.makeText(getActivity(),"Unable to send reminder..Please try again",Toast.LENGTH_SHORT).show();
                 }
                 return null;
             }
-
         };
         asyncTask.execute();
+        startActivity(new Intent(this.getActivity(),ListActivity.class));
     }
 }

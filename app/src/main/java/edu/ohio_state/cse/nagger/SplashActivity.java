@@ -45,9 +45,6 @@ public class SplashActivity extends FragmentActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startIntentService();
-//        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-//        Log.d("piyush", refreshedToken+"");
-
         DatabaseHelper.setTableName(DatabaseHelper.All_TABLE);
         databaseHelper = new DatabaseHelper(this);
         DatabaseHelper.setTableName(DatabaseHelper.USER_TABLE);
@@ -76,51 +73,54 @@ public class SplashActivity extends FragmentActivity implements GoogleApiClient.
         mImageView.setAnimation(animation);
         Log.d(TAG, "Inside Method OnCreate");
 
+        boolean noSplash = false;
+        this.getIntent().getBooleanExtra("NoSplash",noSplash);
+        if(!noSplash) {
+            Thread splashThread = new Thread() {
+                public void run() {
+                    try {
+                        while (!isTouched && mElapsedTime < mSleepTime) {
+                            sleep(mTimeStep);
+                            mElapsedTime = mElapsedTime + mTimeStep;
+                        }
+                    } catch (InterruptedException e) {
 
-        Thread splashThread = new Thread() {
-            public void run() {
-                try {
-                    while (!isTouched && mElapsedTime < mSleepTime) {
-                        sleep(mTimeStep);
-                        mElapsedTime = mElapsedTime + mTimeStep;
+                    } finally {
+                        finish();
+                        launchActivity();
                     }
-                } catch (InterruptedException e) {
-
-                } finally {
-                    finish();
-                    Cursor cur = databaseHelper.selectAll(DatabaseHelper.USER_TABLE);
-                    if (cur.getCount() <= 0) {
-                        SplashActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                            }
-                        });
-                    } else {
-                        cur.moveToFirst();
-                        UserManager userManager = new UserManager();
-
-                        User mUser = userManager.createUser(cur.getString(1), cur.getString(0));
-                        SplashActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                startActivity(new Intent(SplashActivity.this, ListActivity.class));
-                            }
-                        });
-                    }
-//                    }
-
-
-
                 }
-            }
-        };
-        splashThread.start();
-
-
+            };
+            splashThread.start();
+        }
+        else
+            launchActivity();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    public void launchActivity(){
+        Cursor cur = databaseHelper.selectAll(DatabaseHelper.USER_TABLE);
+        if (cur.getCount() <= 0) {
+            SplashActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                }
+            });
+        } else {
+            cur.moveToFirst();
+            UserManager userManager = new UserManager();
+
+            User mUser = userManager.createUser(cur.getString(1), cur.getString(0));
+            SplashActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(new Intent(SplashActivity.this, ListActivity.class));
+                }
+            });
+        }
     }
 
     private void startIntentService() {

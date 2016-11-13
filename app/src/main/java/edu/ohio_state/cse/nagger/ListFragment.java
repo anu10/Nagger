@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.provider.CalendarContract;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -101,10 +102,13 @@ public class ListFragment extends Fragment {
     }
 
     private void signOut(){
-        boolean isLoggedOut = mGoogleTransactions.signOut();
-        if(isLoggedOut){
-            Toast.makeText(this.getContext(),"Log Out Successful",Toast.LENGTH_LONG).show();
-        }
+//        boolean isLoggedOut = mGoogleTransactions.signOut();
+        mDatabaseHelper.deleteUser(mUser);
+//        if(isLoggedOut){
+            mUser = null;
+            Toast.makeText(this.getContext(),"Log Out Successful",Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this.getActivity(),LoginActivity.class));
+//        }
     }
 
     @Override

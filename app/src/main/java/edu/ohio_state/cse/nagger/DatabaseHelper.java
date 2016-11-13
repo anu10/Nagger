@@ -16,8 +16,8 @@ public class DatabaseHelper {
     private static final String INSERT_REMINDER = "insert into Reminder(sender, description, date, time) values (?,?,?,?)";
     private static final String INSERT_USER = "insert into User(email, username) values (?,?)";
     public static final String NOTIFICATION_TABLE = "Notification";
-    public static final String REMINDER_TABLE = "Reminder1";
-    public static final String USER_TABLE = "User1";
+    public static final String REMINDER_TABLE = "Reminder";
+    public static final String USER_TABLE = "User";
     private static String mTableName;
     private Context context;
     private SQLiteDatabase db;
@@ -56,6 +56,11 @@ public class DatabaseHelper {
     public boolean deleteReminder(Reminder reminder){
         return db.delete(REMINDER_TABLE,
                 "reminderId = " + String.valueOf(reminder.getReminderID()),null) > 0;
+    }
+
+    public void deleteUser(User user){
+//        return db.delete(USER_TABLE,"username = " + user.getUserName().toString(),null) > 0;
+        db.execSQL("delete from " + USER_TABLE);
     }
 
     private static class NaggerOpenHelper extends SQLiteOpenHelper {

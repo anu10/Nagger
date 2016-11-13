@@ -16,7 +16,7 @@
     <string name="Google_Sign_In">Sign in with Google account</string>
     <string name="Log_out">Log Out</string>
     <string name="Create_Reminder">Create a Reminder</string>
-    <string name="Send_Reminder">Send Reminder</string>
+    <string name="Send_Reminder">Set Reminder</string>
     <string name="Recipient">Recipient</string>
     <string name="Description">Description</string>
     <string name="Date">Date</string>
