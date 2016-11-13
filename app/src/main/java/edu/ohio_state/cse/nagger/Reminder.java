@@ -8,14 +8,14 @@ public class Reminder {
     private int mReminderID;
     private String mSender;
     private String mReminderDesc;
-    private Date mDate;
-    private java.sql.Time mTime;
+    private String mDate;
+    private String mTime;
 
     public String getSender() {
         return mSender;
     }
 
-    public Reminder(int reminderId,String sender,String reminderDesc, Date date, Time time) {
+    public Reminder(int reminderId,String sender,String reminderDesc, String date, String time) {
         mReminderID = reminderId;
         mSender = sender;
         mReminderDesc = reminderDesc;
@@ -23,7 +23,7 @@ public class Reminder {
         mTime = time;
     }
 
-    public Reminder(String sender,String reminderDesc, Date date, Time time) {
+    public Reminder(String sender,String reminderDesc, String date, String time) {
         mSender = sender;
         mReminderDesc = reminderDesc;
         mDate = date;
@@ -39,11 +39,11 @@ public class Reminder {
         return mReminderDesc;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return mDate;
     }
 
-    public Time getTime() {
+    public String getTime() {
         return mTime;
     }
 

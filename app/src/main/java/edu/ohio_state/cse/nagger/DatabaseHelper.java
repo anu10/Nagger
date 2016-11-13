@@ -75,7 +75,7 @@ public class DatabaseHelper {
                     db.execSQL("CREATE TABLE User(email VARCHAR(50) PRIMARY KEY, username VARCHAR(50))");
                     return;
                 case REMINDER_TABLE:
-                    db.execSQL("CREATE TABLE Reminder(reminderId INTEGER PRIMARY KEY AUTOINCREMENT, sender VARCHAR(50), description TEXT, date DATE, time TIME)");
+                    db.execSQL("CREATE TABLE Reminder(reminderId INTEGER PRIMARY KEY AUTOINCREMENT, sender VARCHAR(50), description TEXT, date TEXT, time TEXT)");
                     return;
                 case NOTIFICATION_TABLE:
                     db.execSQL("CREATE TABLE Notification(reminderId TEXT PRIMARY KEY, senderEmail TEXT, receiverEmail TEXT, status TEXT)");

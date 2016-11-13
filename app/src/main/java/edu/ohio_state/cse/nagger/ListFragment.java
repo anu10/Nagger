@@ -32,7 +32,7 @@ import org.w3c.dom.Text;
 
 import java.sql.Time;
 import java.util.Calendar;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -235,8 +235,8 @@ public class ListFragment extends Fragment {
 //        endMillis = endTime.getTimeInMillis();
 //        values.put(CalendarContract.Events.DTEND,(new Date()).getTime() + 60 * 60 * 10);
 //        values.put(CalendarContract.Events.DTSTART,(new Date()).getTime() + 60 * 60 * 1);
-        Date date = reminder.getDate();
-        Time time = reminder.getTime();
+        Date date = Date.valueOf(reminder.getDate());
+        Time time = Time.valueOf(reminder.getTime());
         Calendar eventTime = Calendar.getInstance();
         eventTime.setTime(date);
         Calendar cal = Calendar.getInstance();

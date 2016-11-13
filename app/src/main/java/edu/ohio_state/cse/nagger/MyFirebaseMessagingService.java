@@ -30,14 +30,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.d(TAG,remoteMessage.getData().get("Sender"));
         Log.d(TAG, "From: " + remoteMessage.getFrom());
         Log.d(TAG, "Notification From: " + remoteMessage.getData().get("Sender"));
+        Log.d("TAG",remoteMessage.getData().get("Date"));
 //        Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
-        try {
+//        try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             mReminder = new Reminder(remoteMessage.getData().get("Sender"),remoteMessage.getData().get("Description"),
-                    simpleDateFormat.parse(remoteMessage.getData().get("Date")), Time.valueOf(remoteMessage.getData().get("Time")));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+                    remoteMessage.getData().get("Date"), remoteMessage.getData().get("Time"));
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)

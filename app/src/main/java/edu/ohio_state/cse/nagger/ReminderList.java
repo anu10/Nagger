@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -32,12 +34,20 @@ public class ReminderList {
 //        reminder = new Reminder("Sayam","Meet me tmorrow",new Date(System.currentTimeMillis()),
 //                new Time(System.currentTimeMillis()));
 //        mDatabaseHelper.insertReminder(reminder);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Cursor cursor = mDatabaseHelper.selectAll(DatabaseHelper.REMINDER_TABLE);
         if(cursor.getCount() >= 1){
             while(cursor.moveToNext()){
-                reminder = new Reminder(Integer.parseInt(cursor.getString(0)),cursor.getString(1),cursor.getString(2),
-                        new Date(System.currentTimeMillis()),new Time(System.currentTimeMillis()));
-                mReminders.add(reminder);
+//                try {
+                Log.d("Date1",cursor.getString(3));
+                    reminder = new Reminder(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2),
+                            cursor.getString(3), cursor.getString(4));
+//                        new Date(System.currentTimeMillis()),new Time(System.currentTimeMillis()));
+                    mReminders.add(reminder);
+//                }
+//                catch (ParseException e){
+//                    Log.d("Parser",e.toString());
+//                }
             }
         }
     }
