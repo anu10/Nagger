@@ -57,6 +57,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 );
         mBuilder.setContentIntent(resultPendingIntent);
 
+        mBuilder.setAutoCancel(true);
+
         int mNotificationId = 001;
         NotificationManager mNotifyMgr =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
