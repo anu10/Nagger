@@ -1,9 +1,12 @@
 package edu.ohio_state.cse.nagger;
 
 import android.*;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.provider.CalendarContract;
 import android.provider.ContactsContract;
@@ -16,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,27 +31,24 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
-
 import java.sql.Time;
 import java.util.Calendar;
 import java.sql.Date;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.UUID;
 
-public class ListFragment extends Fragment {
+public class ListFragment extends Fragment implements PubSub.PubSubListener {
 
     private GoogleTransactions mGoogleTransactions;
     private User mUser;
-    private RecyclerView mCrimeRecyclerView;
+    private RecyclerView mRecyclerView;
     private ReminderAdapter mAdapter;
     ReminderList reminderList;
     ContentResolver cr;
     ContentValues values;
     private DatabaseHelper mDatabaseHelper;
     private TextView textview;
+    private PubSub mPubSub;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,8 +72,8 @@ public class ListFragment extends Fragment {
         textview = (TextView) v.findViewById(R.id.welcome_message);
         setHasOptionsMenu(true);
 
-        mCrimeRecyclerView = (RecyclerView) v.findViewById(R.id.reminder_recycler_view);
-        mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.reminder_recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mDatabaseHelper = new DatabaseHelper(getContext());
 
@@ -80,6 +81,8 @@ public class ListFragment extends Fragment {
             textview.setText("Welcome " + mUser.getUserName() + "!! You have following reminders");
         else
             textview.setText("Welcome " + mUser.getUserName() + "!! Right now you don't have any reminders");
+
+        mPubSub = PubSub.getInstance();
 
         return v;
     }
@@ -114,6 +117,7 @@ public class ListFragment extends Fragment {
     @Override
     public void onStop() {
         this.mGoogleTransactions = null;
+        mPubSub.removeListener("Mes",this);
         super.onStop();
     }
 
@@ -126,11 +130,17 @@ public class ListFragment extends Fragment {
             textview.setText("Welcome " + mUser.getUserName() + "!! You have following reminders");
         else
             textview.setText("Welcome " + mUser.getUserName() + "!! Right now you don't have any reminders");
+        mPubSub.addToListenerMap(this,"Mes");
     }
 
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    @Override
+    public void onEventReceived(String string) {
+        mAdapter.notifyDataSetChanged();
     }
 
     private class ReminderHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -188,7 +198,7 @@ public class ListFragment extends Fragment {
         }
     }
 
-    private class ReminderAdapter extends RecyclerView.Adapter<ReminderHolder>{
+    private class ReminderAdapter extends RecyclerView.Adapter<ReminderHolder> implements PubSub.PubSubListener {
 
         private List<Reminder> mReminderList;
 
@@ -213,15 +223,63 @@ public class ListFragment extends Fragment {
         public ReminderAdapter(List<Reminder> reminderList){
             mReminderList = reminderList;
         }
+
+        @Override
+        public void onEventReceived(String string) {
+                mAdapter.notifyDataSetChanged();
+        }
     }
 
     public boolean updateUI(){
+
         reminderList = ReminderList.get(getActivity());
         List<Reminder> reminders = reminderList.getReminders();
 
         mAdapter = new ReminderAdapter(reminders);
-        mCrimeRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mAdapter);
+        setUpItemTouchHelper();
         return !reminders.isEmpty();
+    }
+
+    public void setUpItemTouchHelper(){
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                int swipedPosition = viewHolder.getAdapterPosition();
+                Reminder reminder = reminderList.getSingleReminder(swipedPosition);
+                ReminderAdapter adapter = (ReminderAdapter)mRecyclerView.getAdapter();
+                if(swipeDir == ItemTouchHelper.LEFT){
+                    Update_Calendar(getView(),reminder);
+                }
+                else{
+                    if(mDatabaseHelper.deleteReminder(reminder)){
+                        Toast.makeText(getContext(),"Delete Successful",Toast.LENGTH_SHORT).show();
+                    }
+                }
+                adapter.notifyItemRemoved(swipedPosition);
+            }
+
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                int swipFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+//                int dragFlags = 0;
+                return makeMovementFlags(0, swipFlags);
+
+            }
+
+            @Override
+            public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                return super.getSwipeDirs(recyclerView, viewHolder);
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
 
     public void Update_Calendar(View v,Reminder reminder){

@@ -31,9 +31,8 @@ public class ReminderList {
         mReminders = new ArrayList<Reminder>();
         Reminder reminder;
         mDatabaseHelper = new DatabaseHelper(context);
-//        reminder = new Reminder("Sayam","Meet me tmorrow",new Date(System.currentTimeMillis()),
-//                new Time(System.currentTimeMillis()));
-//        mDatabaseHelper.insertReminder(reminder);
+        reminder = new Reminder("Sayam","Meet me tmorrow","2016/11/22","08:00:00");
+        mDatabaseHelper.insertReminder(reminder);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Cursor cursor = mDatabaseHelper.selectAll(DatabaseHelper.REMINDER_TABLE);
         if(cursor.getCount() >= 1){
@@ -62,11 +61,12 @@ public class ReminderList {
     }
 
     public Reminder getSingleReminder(int reminderID){
-        for (Reminder reminder: mReminders) {
-            if (reminder.getReminderID() == reminderID)
-                return reminder;
-        }
-        return null;
+        return mReminders.get(reminderID);
+//        for (Reminder reminder: mReminders) {
+//            if (reminder.getReminderID() == reminderID)
+//                return reminder;
+//        }
+//        return null;
     }
 
     public void removeReminder(Reminder reminder){

@@ -69,5 +69,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         mDatabaseHelper.insertReminder(mReminder);
         ReminderList reminderList = ReminderList.get(this);
         reminderList.updateReminderList(mReminder);
+        PubSub pubsub = PubSub.getInstance();
+        pubsub.publish("Mes");
     }
 }

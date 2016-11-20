@@ -174,7 +174,7 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
 
 //                String emailAddress = "eeqUrb08aAM:APA91bHyS0KsCt1R0qODBpE4JZ49AlOJOuVvLVE48stxYDo8zSt5W7mn7MJQhuMXM_labRKvDfjSt_y5wRaJYsV8GcpzgZ-Z-kHJ4tz3W_rjmgDALvg1m7z7qDofjUQHsNVSMG-uwQ_8";
                 try {
-                    mClient.newCall(new Request.Builder().url("http://192.168.43.8/sendpush.php").
+                    mClient.newCall(new Request.Builder().url("http://172.31.225.113/sendpush.php").
                     post(requestBody).build()).execute();
 //                    mClient.newCall(new Request.Builder().get().url("http://192.168.0.9/index1.php?user_id=" + emailAddress + "&message=asdlkfjasdlkfjalsdfkjaslfj").build()).execute();
                 } catch (IOException e) {
