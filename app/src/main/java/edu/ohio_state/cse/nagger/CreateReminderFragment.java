@@ -181,7 +181,7 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
 
                     Response responses = null;
                     try {
-                        mClient.newCall(new Request.Builder().url("http://192.168.43.8/sendpush.php").
+                        responses = mClient.newCall(new Request.Builder().url("http://192.168.43.8/sendpush.php").
                                 post(requestBody).build()).execute();
 
                         String jsonData = responses.body().string();
