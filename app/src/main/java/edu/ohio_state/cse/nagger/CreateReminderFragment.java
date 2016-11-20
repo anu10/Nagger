@@ -33,6 +33,9 @@ import android.widget.Toast;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
@@ -166,16 +169,39 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
                         add("Sender", mUser.getUserName()).
                         add("Email",mEmail).
 //                        add("Email",String.valueOf(mRecipientText)).
-                        add("Description",desc).
-                        add("Date", formatedDate).
-                        add("Time",String.format("%02d:%02d:%02d",hour,minute,calendar.get(Calendar.SECOND))).build();
+        add("Description",desc).
+                                add("Date", formatedDate).
+                                add("Time",String.format("%02d:%02d:%02d",hour,minute,calendar.get(Calendar.SECOND))).build();
 //                Toast.makeText(getActivity(),"Reminder Sent!",Toast.LENGTH_SHORT).show();
 //                        add("Time",String.format("%02d:%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND))).build();
 
 //                String emailAddress = "eeqUrb08aAM:APA91bHyS0KsCt1R0qODBpE4JZ49AlOJOuVvLVE48stxYDo8zSt5W7mn7MJQhuMXM_labRKvDfjSt_y5wRaJYsV8GcpzgZ-Z-kHJ4tz3W_rjmgDALvg1m7z7qDofjUQHsNVSMG-uwQ_8";
+
                 try {
-                    mClient.newCall(new Request.Builder().url("http://172.31.225.113/sendpush.php").
-                    post(requestBody).build()).execute();
+
+                    Response responses = null;
+                    try {
+                        mClient.newCall(new Request.Builder().url("http://192.168.43.8/sendpush.php").
+                                post(requestBody).build()).execute();
+
+                        String jsonData = responses.body().string();
+
+                        JSONObject Jobject = new JSONObject(jsonData);
+                        //Log.e("Bhai.........",jsonData);
+                        int status = Jobject.getInt("success");
+                        String message = Jobject.getString("message");
+                        if(status==1)
+                            Log.e("User hai in Database", message);
+                        if(status == 0)
+                            Log.e("Database Error", message);
+                        if(status==-1)
+                            Log.e("User not registered", message);
+
+                    }
+                    catch(JSONException e)
+                    {
+                        e.printStackTrace();
+                    }
 //                    mClient.newCall(new Request.Builder().get().url("http://192.168.0.9/index1.php?user_id=" + emailAddress + "&message=asdlkfjasdlkfjalsdfkjaslfj").build()).execute();
                 } catch (IOException e) {
                     Log.e("CreateReminderFragment", "Unable to send message", e);

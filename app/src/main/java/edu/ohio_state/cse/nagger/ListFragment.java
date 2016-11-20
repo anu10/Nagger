@@ -140,7 +140,13 @@ public class ListFragment extends Fragment implements PubSub.PubSubListener {
 
     @Override
     public void onEventReceived(String string) {
-        mAdapter.notifyDataSetChanged();
+        Thread t = Thread.currentThread();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private class ReminderHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -254,7 +260,7 @@ public class ListFragment extends Fragment implements PubSub.PubSubListener {
                 int swipedPosition = viewHolder.getAdapterPosition();
                 Reminder reminder = reminderList.getSingleReminder(swipedPosition);
                 ReminderAdapter adapter = (ReminderAdapter)mRecyclerView.getAdapter();
-                if(swipeDir == ItemTouchHelper.LEFT){
+                if(swipeDir == ItemTouchHelper.RIGHT){
                     Update_Calendar(getView(),reminder);
                 }
                 else{
@@ -262,6 +268,7 @@ public class ListFragment extends Fragment implements PubSub.PubSubListener {
                         Toast.makeText(getContext(),"Delete Successful",Toast.LENGTH_SHORT).show();
                     }
                 }
+                reminderList.removeReminder(reminder);
                 adapter.notifyItemRemoved(swipedPosition);
             }
 
@@ -318,6 +325,7 @@ public class ListFragment extends Fragment implements PubSub.PubSubListener {
         }
         else {
             cr.insert(CalendarContract.Events.CONTENT_URI, values);
+            mDatabaseHelper.deleteReminder(reminder);
             Toast.makeText(getContext(),"Update Successful",Toast.LENGTH_LONG).show();
         }
     }

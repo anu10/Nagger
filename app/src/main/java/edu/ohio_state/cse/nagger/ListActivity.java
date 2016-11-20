@@ -42,7 +42,6 @@ public class ListActivity extends FragmentActivity {
                     public void run() {
                         startActivity(new Intent(ListActivity.this, CreateReminderActivity.class));
                     }
-
                 });
             }
         });

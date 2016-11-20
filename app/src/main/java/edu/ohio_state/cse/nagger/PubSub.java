@@ -43,7 +43,7 @@ public class PubSub {
         queue = new ConcurrentLinkedQueue<>();
 
         MyThread t = new MyThread();
-        t.run();
+        t.start();
     }
 
     public static PubSub getInstance(){

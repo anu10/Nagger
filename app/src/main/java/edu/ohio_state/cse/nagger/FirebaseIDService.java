@@ -3,8 +3,14 @@ package edu.ohio_state.cse.nagger;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.appdatasearch.GetRecentContextCall;
+import com.google.api.client.googleapis.auth.clientlogin.ClientLogin;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -12,6 +18,7 @@ import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class FirebaseIDService extends FirebaseInstanceIdService {
     private static final String TAG = "FCM";
@@ -50,8 +57,30 @@ public class FirebaseIDService extends FirebaseInstanceIdService {
                             add("Token", refreshedToken).build();
                     try {
                         mClient.retryOnConnectionFailure();
-                        mClient.newCall(new Request.Builder().url("http://172.31.225.113/storeUser.php").
-                                post(requestBody).build()).execute();
+                        Response responses = null;
+                        try {
+                            mClient.retryOnConnectionFailure();
+                            responses = mClient.newCall(new Request.Builder().url("http://192.168.43.8/storeUser.php").
+                                    post(requestBody).build()).execute();
+
+                            //Log.e("Bhai.........",responses.toString());
+                            String jsonData = responses.body().string();
+
+                            JSONObject Jobject = new JSONObject(jsonData);
+                            //Log.e("Bhai.........",jsonData);
+                            int status = Jobject.getInt("success");
+                            String message = Jobject.getString("message");
+                            if(status==1)
+                                Log.e("User hai in Database", message);
+                            if(status == 0)
+                                Log.e("Database Error", message);
+
+                        }
+                        catch(JSONException e)
+                        {
+                            e.printStackTrace();
+                        }
+
                         Log.e(FirebaseIDService.class.getName(), "Sent token to server");
                     } catch (IOException e) {
                         Log.e(FirebaseIDService.class.getName(), "Unable to send registration token", e);
