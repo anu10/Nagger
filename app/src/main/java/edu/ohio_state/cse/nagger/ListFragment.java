@@ -335,6 +335,7 @@ public class ListFragment extends Fragment implements PubSub.PubSubListener {
             Toast.makeText(getContext(),"Update Successful",Toast.LENGTH_LONG).show();
         }
     }
+    
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
