@@ -190,7 +190,7 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
 
                     Response responses = null;
                     try {
-                        mClient.newCall(new Request.Builder().url("http://192.168.43.8/sendpush.php").
+                        responses = mClient.newCall(new Request.Builder().url("http://192.168.43.8/sendpush.php").
                                 post(requestBody).build()).execute();
 
                         String jsonData = responses.body().string();
@@ -199,12 +199,23 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
                         //Log.e("Bhai.........",jsonData);
                         int status = Jobject.getInt("success");
                         String message = Jobject.getString("message");
-                        if(status==1)
+                        if(status==1) {
                             Log.e("User hai in Database", message);
+
+
+                        }
                         if(status == 0)
                             Log.e("Database Error", message);
-                        if(status==-1)
+                        if(status==-1) {
+                            //Toast.makeText(getActivity(),"User doesn't have the app. Send email!",Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                                    "mailto",mEmail, null));
+                            intent.putExtra(Intent.EXTRA_SUBJECT, "You have a reminder");
+                            intent.putExtra(Intent.EXTRA_TEXT, desc);
+                            startActivity(Intent.createChooser(intent, "Choose an Email client :"));
                             Log.e("User not registered", message);
+                        }
 
                     }
                     catch(JSONException e)
@@ -222,6 +233,7 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
         asyncTask.execute();
         startActivity(new Intent(this.getActivity(),ListActivity.class));
         Toast.makeText(getActivity(),"Reminder Sent!",Toast.LENGTH_SHORT).show();
+
     }
 
 }

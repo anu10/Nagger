@@ -1,9 +1,11 @@
 package edu.ohio_state.cse.nagger;
 
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -40,36 +42,41 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //            e.printStackTrace();
 //        }
 
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.nagger)
-                        .setContentTitle(mReminder.getSender())
-                        .setContentText(mReminder.getReminderDesc());
-
-        Intent resultIntent = new Intent(this, SplashActivity.class).putExtra("NoSplash",true);
-
-        PendingIntent resultPendingIntent =
-                PendingIntent.getActivity(
-                        this,
-                        0,
-                        resultIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-        mBuilder.setContentIntent(resultPendingIntent);
-
-        mBuilder.setAutoCancel(true);
-
-        int mNotificationId = 001;
-        NotificationManager mNotifyMgr =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
-
         DatabaseHelper.setTableName(DatabaseHelper.REMINDER_TABLE);
         mDatabaseHelper = new DatabaseHelper(this);
         mDatabaseHelper.insertReminder(mReminder);
-        ReminderList reminderList = ReminderList.get(this);
-        reminderList.updateReminderList(mReminder);
-        PubSub pubsub = PubSub.getInstance();
-        pubsub.publish("Mes");
+
+        SharedPreferences mPrefs = getSharedPreferences("Foreground", Activity.MODE_PRIVATE);
+        if(!mPrefs.getBoolean("Fore",false)) {
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.nagger)
+                            .setContentTitle(mReminder.getSender())
+                            .setContentText(mReminder.getReminderDesc());
+
+            Intent resultIntent = new Intent(this, SplashActivity.class).putExtra("NoSplash", true);
+
+            PendingIntent resultPendingIntent =
+                    PendingIntent.getActivity(
+                            this,
+                            0,
+                            resultIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                    );
+            mBuilder.setContentIntent(resultPendingIntent);
+
+            mBuilder.setAutoCancel(true);
+
+            int mNotificationId = 001;
+            NotificationManager mNotifyMgr =
+                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            mNotifyMgr.notify(mNotificationId, mBuilder.build());
+        }
+        else{
+            ReminderList reminderList = ReminderList.get(this);
+            reminderList.updateReminderList(mReminder);
+            PubSub pubsub = PubSub.getInstance();
+            pubsub.publish("Mes");
+        }
     }
 }

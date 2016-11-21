@@ -1,6 +1,7 @@
 package edu.ohio_state.cse.nagger;
 
 import android.*;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -118,6 +119,9 @@ public class ListFragment extends Fragment implements PubSub.PubSubListener {
     public void onStop() {
         this.mGoogleTransactions = null;
         mPubSub.removeListener("Mes",this);
+        SharedPreferences mPrefs = getActivity().getSharedPreferences("Foreground", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        editor.putBoolean("Fore",false).commit();
         super.onStop();
     }
 
@@ -131,6 +135,9 @@ public class ListFragment extends Fragment implements PubSub.PubSubListener {
         else
             textview.setText("Welcome " + mUser.getUserName() + "!! Right now you don't have any reminders");
         mPubSub.addToListenerMap(this,"Mes");
+        SharedPreferences mPrefs = getActivity().getSharedPreferences("Foreground", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        editor.putBoolean("Fore",true).commit();
     }
 
     @Override
@@ -277,7 +284,6 @@ public class ListFragment extends Fragment implements PubSub.PubSubListener {
                 int swipFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
 //                int dragFlags = 0;
                 return makeMovementFlags(0, swipFlags);
-
             }
 
             @Override
@@ -329,6 +335,7 @@ public class ListFragment extends Fragment implements PubSub.PubSubListener {
             Toast.makeText(getContext(),"Update Successful",Toast.LENGTH_LONG).show();
         }
     }
+    
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
