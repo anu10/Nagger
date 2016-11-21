@@ -1,6 +1,8 @@
 package edu.ohio_state.cse.nagger;
 
 import android.Manifest;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -20,10 +22,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.media.MediaDescriptionCompat;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -39,9 +44,13 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.TimeZone;
+import java.util.regex.Pattern;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -82,6 +91,7 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
         senSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+
     }
 
     @Override
@@ -144,7 +154,6 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
         super.onResume();
         senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
-
 
     public void sendServer() {
         mEmail = mRecipientText.getText().toString();
@@ -214,4 +223,5 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
         startActivity(new Intent(this.getActivity(),ListActivity.class));
         Toast.makeText(getActivity(),"Reminder Sent!",Toast.LENGTH_SHORT).show();
     }
+
 }

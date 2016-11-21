@@ -42,6 +42,7 @@ public class FirebaseIDService extends FirebaseInstanceIdService {
      *
      * @param refreshedToken
      */
+
     public static void sendRegistrationToServer(final String refreshedToken) {
         // Add custom implementation, as needed.
         //Async Task

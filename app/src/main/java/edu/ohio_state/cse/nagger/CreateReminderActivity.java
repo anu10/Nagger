@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 
 public class CreateReminderActivity extends FragmentActivity {
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
