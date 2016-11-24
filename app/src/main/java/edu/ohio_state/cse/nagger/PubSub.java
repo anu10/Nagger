@@ -14,9 +14,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by Harsh Gupta on 11/20/2016.
- */
 public class PubSub {
 
     HashMap<String, Set<PubSubListener>> listenerMap;
