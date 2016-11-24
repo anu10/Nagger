@@ -267,6 +267,7 @@ public class ListFragment extends Fragment implements PubSub.PubSubListener {
                 int swipedPosition = viewHolder.getAdapterPosition();
                 Reminder reminder = reminderList.getSingleReminder(swipedPosition);
                 ReminderAdapter adapter = (ReminderAdapter)mRecyclerView.getAdapter();
+                Log.e("Blah", "Received event");
                 if(swipeDir == ItemTouchHelper.RIGHT){
                     Update_Calendar(getView(),reminder);
                 }

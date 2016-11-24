@@ -31,8 +31,6 @@ public class ReminderList {
         mReminders = new ArrayList<Reminder>();
         Reminder reminder;
         mDatabaseHelper = new DatabaseHelper(context);
-//        reminder = new Reminder("Sayam","Meet me tmorrow","2016/11/22","08:00:00");
-//        mDatabaseHelper.insertReminder(reminder);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Cursor cursor = mDatabaseHelper.selectAll(DatabaseHelper.REMINDER_TABLE);
         if(cursor.getCount() >= 1){
