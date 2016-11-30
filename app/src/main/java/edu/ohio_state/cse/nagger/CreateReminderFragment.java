@@ -13,16 +13,18 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
+//import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.media.MediaDescriptionCompat;
-import android.support.v7.app.ActionBarActivity;
+//import android.support.v4.content.ContextCompat;
+//import android.support.v4.media.MediaDescriptionCompat;
+//import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +60,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import android.support.v7.app.AppCompatActivity;
 
 public class CreateReminderFragment extends Fragment implements SensorEventListener {
 
@@ -76,6 +79,7 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
     android.net.Uri calendars;
     int year,month,day,hour,minute;
     String formatedDate;
+    int sent = 0;
 
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
@@ -94,6 +98,26 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
 
     }
 
+
+    //NetworkConnectivity internet_connection = new NetworkConnectivity();
+
+    private boolean hasNetworkConnection(){
+        ConnectivityManager connectivityManager	=
+                (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo	=
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        boolean isConnected	=	true;
+        boolean isWifiAvailable	=	networkInfo.isAvailable();
+        boolean isWifiConnected	=	networkInfo.isConnected();
+        networkInfo	=
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        boolean isMobileAvailable	=	networkInfo.isAvailable();
+        boolean isMobileConnnected	=	networkInfo.isConnected();
+        isConnected	=	(isMobileAvailable&&isMobileConnnected)	||
+                (isWifiAvailable&&isWifiConnected);
+        return(isConnected);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.create_reminder_fragment, container, false);
@@ -108,7 +132,10 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
             @Override
             public void onClick(View v) {
 //                Insert Here for Sending to Sever
-                sendServer();
+                if(hasNetworkConnection())
+                    sendServer();
+                else
+                    Toast.makeText(getActivity(),"Please connect to internet",Toast.LENGTH_SHORT).show();
             }
         });
         return v;
@@ -129,7 +156,10 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
                 lastUpdate = curTime;
                 float speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
                 if (speed > SHAKE_THRESHOLD) {
+                    if(hasNetworkConnection())
                     sendServer();
+                    else
+                        Toast.makeText(getActivity(),"Please connect to internet",Toast.LENGTH_SHORT).show();
                 }
                 last_x = x;
                 last_y = y;
@@ -156,6 +186,7 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
     }
 
     public void sendServer() {
+
         mEmail = mRecipientText.getText().toString();
         desc = mDescriptionText.getText().toString();
         day  = mDate.getDayOfMonth();
@@ -190,13 +221,14 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
 
                     Response responses = null;
                     try {
-                        responses = mClient.newCall(new Request.Builder().url("http://192.168.43.8/sendpush.php").
+                        responses = mClient.newCall(new Request.Builder().url("http://192.168.0.20/sendpush.php").
                                 post(requestBody).build()).execute();
 
                         String jsonData = responses.body().string();
+                        Log.e("Bhai.........",jsonData);
 
                         JSONObject Jobject = new JSONObject(jsonData);
-                        //Log.e("Bhai.........",jsonData);
+                        Log.e("Bhai.........",jsonData);
                         int status = Jobject.getInt("success");
                         String message = Jobject.getString("message");
                         if(status==1) {
@@ -214,16 +246,23 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
                             intent.putExtra(Intent.EXTRA_SUBJECT, "You have a reminder");
                             intent.putExtra(Intent.EXTRA_TEXT, desc);
                             startActivity(Intent.createChooser(intent, "Choose an Email client :"));
-                            Log.e("User not registered", message);
+                            //Toast.makeText(getActivity(),"User not registered. Send Email and SMS",Toast.LENGTH_SHORT).show();
+                            sent = -1;
+                            Log.e("User not registered", Integer.toString(sent));
                         }
 
                     }
                     catch(JSONException e)
                     {
+                        sent = 1;
+                        Log.e("Cannot connect DataBase", "Try Again", e);
+                        //Toast.makeText(getActivity(),"Check internet connection. Try Again",Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
 //                    mClient.newCall(new Request.Builder().get().url("http://192.168.0.9/index1.php?user_id=" + emailAddress + "&message=asdlkfjasdlkfjalsdfkjaslfj").build()).execute();
                 } catch (IOException e) {
+                    sent = 1;
+                   // Toast.makeText(getActivity(),"Check internet connection. Try Again",Toast.LENGTH_SHORT).show();
                     Log.e("CreateReminderFragment", "Unable to send message", e);
 //                    Toast.makeText(getActivity(),"Unable to send reminder..Please try again",Toast.LENGTH_SHORT).show();
                 }
@@ -232,7 +271,16 @@ public class CreateReminderFragment extends Fragment implements SensorEventListe
         };
         asyncTask.execute();
         startActivity(new Intent(this.getActivity(),ListActivity.class));
-        Toast.makeText(getActivity(),"Reminder Sent!",Toast.LENGTH_SHORT).show();
+
+
+        if(sent==1)
+            Toast.makeText(getActivity(),"Check internet connection. Try Again",Toast.LENGTH_SHORT).show();
+        if(sent==-1)
+            Toast.makeText(getActivity(),"User not registered. Send Email and SMS",Toast.LENGTH_SHORT).show();
+        if(sent==0)
+            Toast.makeText(getActivity(),"Reminder Sent!",Toast.LENGTH_SHORT).show();
+
+
 
     }
 

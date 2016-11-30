@@ -1,6 +1,9 @@
 package edu.ohio_state.cse.nagger;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,11 +40,33 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mButtonSignIn.setOnClickListener(this);
     }
 
+    //NetworkConnectivity internet_connection = new NetworkConnectivity();
+
+    private	boolean hasNetworkConnection(){
+        ConnectivityManager connectivityManager	=
+                (ConnectivityManager)	getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo	=
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        boolean isConnected	=	true;
+        boolean isWifiAvailable	=	networkInfo.isAvailable();
+        boolean isWifiConnected	=	networkInfo.isConnected();
+        networkInfo	=
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        boolean isMobileAvailable	=	networkInfo.isAvailable();
+        boolean isMobileConnnected	=	networkInfo.isConnected();
+        isConnected	=	(isMobileAvailable&&isMobileConnnected)	||
+                (isWifiAvailable&&isWifiConnected);
+        return(isConnected);
+    }
+
     @Override
     public void onClick(View v){
         switch (v.getId()){
             case R.id.button_sign_in:
+                if(hasNetworkConnection())
                 signIn();
+                else
+                    Toast.makeText(this,"Please connect to internet",Toast.LENGTH_SHORT).show();
                 break;
         }
     }

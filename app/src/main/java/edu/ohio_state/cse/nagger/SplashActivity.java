@@ -173,6 +173,7 @@ public class SplashActivity extends FragmentActivity implements GoogleApiClient.
     @Override
     public void onPause() {
         super.onPause();
+        mImageView.setImageDrawable(null);
         Log.d(TAG, "Inside Method OnPause");
     }
 
@@ -203,5 +204,6 @@ public class SplashActivity extends FragmentActivity implements GoogleApiClient.
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "Inside Method OnDestroy");
+        mImageView = null;
     }
 }

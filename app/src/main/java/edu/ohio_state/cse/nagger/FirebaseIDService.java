@@ -61,7 +61,7 @@ public class FirebaseIDService extends FirebaseInstanceIdService {
                         Response responses = null;
                         try {
                             mClient.retryOnConnectionFailure();
-                            responses = mClient.newCall(new Request.Builder().url("http://192.168.43.8/storeUser.php").
+                            responses = mClient.newCall(new Request.Builder().url("http://192.168.0.20/storeUser.php").
                                     post(requestBody).build()).execute();
 
                             //Log.e("Bhai.........",responses.toString());
