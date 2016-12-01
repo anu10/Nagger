@@ -18,6 +18,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
+
     private final String TAG = getClass().getSimpleName();
     private SignInButton mButtonSignIn;
     private GoogleTransactions mGoogleTransactions;
